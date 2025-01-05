@@ -1,14 +1,17 @@
-const AllowedRoles = async (roles) => {
-  return (req, res, next) => {
+import Employee from "../models/employee.model.js";
+
+const AllowedRoles = (roles) => {
+  return async (req, res, next) => {
     try {
-      const userRole = req.user.role;
-      if (!userRole) {
+      const user = req.user.id;
+      if (!user) {
         return res.status(400).json({
           success: false,
-          message: "user doesn't defined",
+          message: "User not defined",
         });
       }
-      if (roles.includes(userRole)) {
+      const userRole = await Employee.findById(user);
+      if (roles.includes(userRole.role)) {
         next();
       } else {
         return res.status(403).json({
@@ -25,3 +28,5 @@ const AllowedRoles = async (roles) => {
     }
   };
 };
+
+export default AllowedRoles;
