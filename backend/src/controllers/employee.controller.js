@@ -3,7 +3,7 @@ import createEmployeeId from "../libs/createEmployeeId.js";
 import Employee from "../models/employee.model.js";
 import UserToken from "../libs/userToken.js";
 
-export const userSignup = async (req, res) => {
+export const employeeSignup = async (req, res) => {
   try {
     const {
       fullName,
@@ -101,7 +101,7 @@ export const userSignup = async (req, res) => {
   }
 };
 
-export const userLogin = async (req, res) => {
+export const employeeLogin = async (req, res) => {
   try {
     const { email, phoneNumber, password, role } = req.body;
     if (!email || !phoneNumber || !password || !role) {
@@ -117,6 +117,21 @@ export const userLogin = async (req, res) => {
         message: "Employee doesn't register!!",
       });
     }
+
+    if (isEmployeeExist.phoneNumber !== phoneNumber) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid phone number.",
+      });
+    }
+
+    if (isEmployeeExist.role !== role) {
+      return res.status(403).json({
+        success: false,
+        message: `Access denied for role: ${role}.`,
+      });
+    }
+
     const isComparePassword = await bcrypt.compare(
       password,
       isEmployeeExist.password
@@ -129,7 +144,6 @@ export const userLogin = async (req, res) => {
     }
 
     const token = await UserToken(isEmployeeExist._id, res);
-
     return res.status(200).json({
       success: true,
       message: "Login Successfully",
@@ -144,7 +158,7 @@ export const userLogin = async (req, res) => {
   }
 };
 
-export const userLogout = async (req, res) => {
+export const employeeLogout = async (req, res) => {
   try {
     res.clearCookie("userToken", {
       httpOnly: true,
@@ -156,7 +170,171 @@ export const userLogout = async (req, res) => {
       message: "Logout successfully!",
     });
   } catch (error) {
-    console.error(error?.message || "Error in userLogout controller");
+    console.error(error?.message || "Error in Logout controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const updateEmployeeDetails = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+    const fieldsUpdate = req.body;
+
+    if (!employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: "EmployyeId is required!!",
+      });
+    }
+
+    const validFields = [
+      "fullName",
+      "email",
+      "address",
+      "phoneNumber",
+      "role",
+      "designation",
+      "department",
+      "reportingManager",
+      "leaveBalance",
+      "assets",
+      "employmentStatus",
+      "personalDetails",
+      "companyDetails",
+    ];
+
+    if (!fieldsUpdate || Object.keys(fieldsUpdate).length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one fields is required to update",
+      });
+    }
+
+    const invalidKeys = Object.keys(fieldsUpdate).filter(
+      (key) => !validFields.includes(key)
+    );
+
+    if (invalidKeys.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid keys provided: ${invalidKeys.join(", ")}`,
+      });
+    }
+
+    const updateEmployee = await Employee.findByIdAndUpdate(
+      employeeId,
+      fieldsUpdate,
+      { new: true }
+    );
+    if (!updateEmployee) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee not found!!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Employee updated successfully",
+      employee: updateEmployee,
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in update profile controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const deleteEmployeeDetails = async (req, res) => {
+  try {
+    const { employeeId } = req.params;
+
+    if (!employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: "EmployyeId is required!!",
+      });
+    }
+
+    const deleteProfile = await Employee.findByIdAndDelete(employeeId);
+
+    if (!deleteProfile) {
+      return res.status(400).json({
+        success: false,
+        message: "EmployyeId not found!!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Employee updated successfully",
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in Delete profile controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const allEmployeeDetails = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 10,
+      designation,
+      department,
+      role,
+      reportingManager,
+    } = req.query;
+
+    // if (designation) filterCriteria.designation = designation;
+    // if (department) filterCriteria.department = department;
+    // if (role) filterCriteria.role = role;
+    // if (reportingManager) filterCriteria.reportingManager = reportingManager;
+
+    const filterCriteria = {};
+
+    if (designation)
+      filterCriteria.designation = {
+        $regex: `^${designation}$`,
+        $options: "i",
+      };
+    if (department)
+      filterCriteria.department = { $regex: `^${department}$`, $options: "i" };
+    if (role) filterCriteria.role = { $regex: `^${role}$`, $options: "i" };
+    if (reportingManager)
+      filterCriteria.reportingManager = {
+        $regex: `^${reportingManager}$`,
+        $options: "i",
+      };
+
+    const allEmployee = await Employee.find(filterCriteria)
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const totalEmployCount = await Employee.countDocuments(filterCriteria);
+
+    if (!allEmployee || allEmployee.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No employees found with the given criteria.",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Employee details fetched successfully",
+      totalEmployee: totalEmployCount,
+      currentPage: page,
+      totalPage: Math.ceil(totalEmployCount / limit),
+      employees: allEmployee,
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in all employee profile controller");
     return res.status(500).json({
       success: false,
       message: "Internal Server Error!",

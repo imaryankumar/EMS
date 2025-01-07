@@ -19,6 +19,11 @@ const employeeSchema = new mongoose.Schema(
     dateOfJoining: { type: Date, required: true, default: Date.now },
     leaveBalance: { type: Number, default: 24 },
     assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: null,
+    },
     employmentStatus: {
       type: String,
       enum: ["Active", "Inactive"],

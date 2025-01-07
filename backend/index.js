@@ -16,11 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Routes
-app.use("/api/v1/user", EmployeeRouter);
-
-app.get("/api/v1/user/home", UserAuth, AllowedRoles(["HR"]), (req, res) => {
-  res.json("User Home");
-});
+app.use("/api/v1/employee", EmployeeRouter);
 
 app.listen(PORT, () => {
   ConnectDB();
