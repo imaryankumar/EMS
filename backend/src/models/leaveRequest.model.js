@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
 
+export const leaveTypes = [
+  "Casual Leave",
+  "Sick Leave",
+  "Half-Day Leave (Casual)",
+  "Half-Day Leave (Sick)",
+  "Compensatory Leave (India)",
+  "Compensatory Leave (Egypt)",
+  "Work From Home",
+  "Marriage Leave (Self)",
+  "Parental Leave",
+  "Parental Work From Home",
+  "Birthday Month leave",
+];
+
 const leaveRequestSchema = new mongoose.Schema(
   {
     employee: {
@@ -11,7 +25,7 @@ const leaveRequestSchema = new mongoose.Schema(
     endDate: { type: Date, required: true },
     leaveType: {
       type: String,
-      enum: ["Sick Leave", "Casual Leave", "WFH", "Other"],
+      enum: [...leaveTypes],
       required: true,
     },
     reason: { type: String },
