@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import createEmployeeId from "../libs/createEmployeeId.js";
 import Employee from "../models/employee.model.js";
 import UserToken from "../libs/userToken.js";
+import jwt from "jsonwebtoken";
 
 export const employeeSignup = async (req, res) => {
   try {
@@ -171,6 +172,103 @@ export const employeeLogout = async (req, res) => {
     });
   } catch (error) {
     console.error(error?.message || "Error in Logout controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const employeeForgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "email is required!!",
+      });
+    }
+
+    const isUserExist = await Employee.findOne({ email });
+
+    if (!isUserExist) {
+      return res.status(400).json({
+        success: false,
+        message: "employee doesn't exist!!",
+      });
+    }
+    const token = await UserToken(isUserExist._id, res);
+
+    // send token on user email id and click buttn then redirect reset password page in frontend...
+    //TODO
+
+    return res.status(200).json({
+      success: true,
+      message: "Forgot password successfully",
+      token,
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in forgot controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const employeeResetPassword = async (req, res) => {
+  try {
+    const { password, confirmPassword } = req.body;
+    const { tokenId } = req.params;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required!!",
+      });
+    }
+
+    if (!tokenId) {
+      return res.status(400).json({
+        success: false,
+        message: "token is required!!",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Both password doesn't match!!",
+      });
+    }
+
+    const verifyToken = await jwt.verify(tokenId, process.env.JWT_SECRET_KEY);
+    if (!verifyToken) {
+      return res.status(403).json({
+        success: false,
+        message: "unauthorization token!",
+      });
+    }
+    const hashPassword = await bcrypt.hash(password, 12);
+    const userUpdate = await Employee.findByIdAndUpdate(
+      verifyToken.id,
+      { password: hashPassword },
+      { new: true }
+    );
+
+    if (!userUpdate) {
+      return res.status(400).json({
+        success: false,
+        message: "user not update!!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Reset password successfully",
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in reset controller");
     return res.status(500).json({
       success: false,
       message: "Internal Server Error!",

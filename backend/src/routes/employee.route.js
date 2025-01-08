@@ -3,8 +3,10 @@ import UserAuth from "../middleware/UserAuth.js";
 import {
   allEmployeeDetails,
   deleteEmployeeDetails,
+  employeeForgotPassword,
   employeeLogin,
   employeeLogout,
+  employeeResetPassword,
   employeeSignup,
   updateEmployeeDetails,
 } from "../controllers/employee.controller.js";
@@ -15,6 +17,8 @@ const router = express.Router();
 router.post("/signup", employeeSignup);
 router.post("/login", employeeLogin);
 router.post("/logout", UserAuth, employeeLogout);
+router.post("/forgot", employeeForgotPassword);
+router.patch("/reset/:tokenId", employeeResetPassword);
 
 router.patch(
   "/:employeeId",
