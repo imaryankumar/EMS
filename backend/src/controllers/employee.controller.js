@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import createEmployeeId from "../libs/createEmployeeId.js";
 import Employee from "../models/employee.model.js";
 import UserToken from "../libs/userToken.js";
