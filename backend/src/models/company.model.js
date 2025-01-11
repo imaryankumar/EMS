@@ -1,9 +1,30 @@
 import mongoose from "mongoose";
 
 const companySchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  domain: { type: String, required: true },
-  admin: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  companyName: { type: String, required: true },
+  companyEmail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phoneNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  gstNumber: {
+    type: String,
+    required: true,
+  },
+  subscription: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subscription",
+  },
+  isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -20,6 +20,8 @@ export const employeeSignup = async (req, res) => {
       employmentStatus,
       personalDetails,
       companyDetails,
+      profilePic,
+      gender,
     } = req.body;
 
     if (
@@ -38,7 +40,9 @@ export const employeeSignup = async (req, res) => {
       !personalDetails?.dateOfBirth ||
       !personalDetails?.maritalStatus ||
       !companyDetails?.probationPeriod ||
-      !companyDetails?.contractType
+      !companyDetails?.contractType ||
+      !profilePic ||
+      !gender
     ) {
       return res.status(400).json({
         success: false,
@@ -71,6 +75,9 @@ export const employeeSignup = async (req, res) => {
       });
     }
 
+    const maleProfilePic = `https://avatar.iran.liara.run/public/boy?username=${fullName}`;
+    const femaleProfilePic = `https://avatar.iran.liara.run/public/girl?username=${fullName}`;
+
     const user = await Employee.create({
       fullName,
       email,
@@ -86,6 +93,8 @@ export const employeeSignup = async (req, res) => {
       employmentStatus,
       personalDetails,
       companyDetails,
+      gender,
+      profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
 
     return res.status(201).json({
