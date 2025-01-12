@@ -10,7 +10,7 @@ const employeeSchema = new mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ['HR Manager', 'Sales Manager', 'Marketing Manager', 'Software Developer', 'Operations Manager', 'Finance Manager', 'Customer Support Representative',"Admin"],
+      enum: ["Admin", "HR", "Team Lead", "Employee", "Manager", "Intern"],
       default: "Employee",
     },
     profilePic: {
@@ -23,9 +23,7 @@ const employeeSchema = new mongoose.Schema(
       required: true,
     },
     designation: { type: String, required: true },
-    department: { type: String,
-      enum: ['HR', 'Sales', 'Marketing', 'Development', 'Operations', 'Finance', 'Customer Service'],
-       required: true },
+    department: { type: String, required: true },
     reportingManager: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
     dateOfJoining: { type: Date, required: true, default: Date.now },
     leaveBalance: { type: Number, default: 24 },
@@ -33,7 +31,7 @@ const employeeSchema = new mongoose.Schema(
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
-      required: true,
+      required: null,
     },
     jobType: {
       type: String,

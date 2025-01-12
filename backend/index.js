@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import EmployeeRouter from "./src/routes/employee.route.js";
 import LeaveEmployeRouter from "./src/routes/leave.route.js";
 import CompanyRouter from "./src/routes/company.route.js";
+import AssetRouter from "./src/routes/asset.route.js"
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use("/api/v1/employee", EmployeeRouter);
 app.use("/api/v1/employee", LeaveEmployeRouter);
 app.use("/api/v1/company", CompanyRouter);
+app.use("/api/v1/asset", AssetRouter);
 
 app.listen(PORT, () => {
   ConnectDB();
