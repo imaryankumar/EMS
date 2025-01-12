@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Employee from "../models/employee.model.js";
 
 const AllowedRoles = (roles) => {
@@ -8,6 +9,12 @@ const AllowedRoles = (roles) => {
         return res.status(400).json({
           success: false,
           message: "User not defined",
+        });
+      }
+      if (!mongoose.Types.ObjectId.isValid(user)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid userId!!",
         });
       }
       const userRole = await Employee.findById(user);

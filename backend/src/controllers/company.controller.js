@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import Company from "../models/company.model.js";
-import jwt from "jsonwebtoken";
+import CompanyToken from "../libs/companyToken.js";
 
 export const companySignup = async (req, res) => {
   try {
@@ -64,13 +64,13 @@ export const companyLogin = async (req, res) => {
       });
     }
     const companyExist = await Company.findOne({
-      companyEmail,
+      companyEmail,phoneNumber
     });
 
     if (!companyExist) {
       return res.status(400).json({
         success: false,
-        message: "email and phone number not found!!",
+        message: "email and phone number not valid!!",
       });
     }
 
@@ -81,13 +81,7 @@ export const companyLogin = async (req, res) => {
       });
     }
 
-    const token = await jwt.sign(
-      { comanyId: companyExist._id },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: "1d",
-      }
-    );
+   const token = await CompanyToken(companyExist._id,res);
 
     return res.status(200).json({
       success: true,
@@ -127,12 +121,21 @@ export const companyVerified = async (req, res) => {
       });
     }
 
-    isCompany.isVerified = true;
+    if(isCompany.isVerified){
+      return res.status(400).json({
+        success: false,
+        message: "Already verified Account!!",
+      });
+    }
 
+    isCompany.isVerified = true;
     await isCompany.save();
 
+    // message send your account verified
+    //TODO
+
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "User Veriried Successfully",
       isCompany,
     });
@@ -144,3 +147,113 @@ export const companyVerified = async (req, res) => {
     });
   }
 };
+
+
+export const companyProfileUpdate = async(req,res)=>{
+try {
+  const { companyId } = req.params;
+  const companyDetails = req.body;
+
+  if (!companyId) {
+    return res.status(400).json({
+      success: false,
+      message: "companyId is required!!",
+    });
+  }
+
+
+  if (!mongoose.Types.ObjectId.isValid(companyId)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid companyId!!",
+    });
+  }
+  if (!companyDetails || Object.keys(companyDetails).length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "At least one fields is required to update",
+    });
+  }
+
+  const updateCompanyDetail = await Company.findByIdAndUpdate(companyId,companyDetails,{new:true});
+  if(!updateCompanyDetail){
+    return res.status(400).json({
+      success: false,
+      message: "Update details error found!!",
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Company details updated successfully",
+    updateCompanyDetail
+  });
+
+
+} catch (error) {
+  console.error(error?.message || "Error on company profile update Controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!!",
+    });
+}
+}
+
+export const companyDeleteDetails = async(req,res)=>{
+  try {
+    const { companyId } = req.params;
+  
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message: "companyId is required!!",
+      });
+    }
+  
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid companyId!!",
+      });
+    }
+   const deleteCompanyDetail= await Company.findByIdAndDelete(companyId);
+
+    if (!deleteCompanyDetail) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId not found!!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Delete company details successfully",
+    });
+
+  } catch (error) {
+    console.error(error?.message || "Error on company delete Controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!!",
+    });
+  }
+}
+
+export const companyLogout = async(req,res)=>{
+  try {
+    res.clearCookie("companyToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Logout successfully!",
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in Logout controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+}

@@ -3,6 +3,7 @@ import createEmployeeId from "../libs/createEmployeeId.js";
 import Employee from "../models/employee.model.js";
 import UserToken from "../libs/userToken.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 export const employeeSignup = async (req, res) => {
   try {
@@ -22,6 +23,7 @@ export const employeeSignup = async (req, res) => {
       companyDetails,
       profilePic,
       gender,
+      jobType
     } = req.body;
 
     if (
@@ -41,8 +43,8 @@ export const employeeSignup = async (req, res) => {
       !personalDetails?.maritalStatus ||
       !companyDetails?.probationPeriod ||
       !companyDetails?.contractType ||
-      !profilePic ||
-      !gender
+      !gender||
+      !jobType
     ) {
       return res.status(400).json({
         success: false,
@@ -74,9 +76,15 @@ export const employeeSignup = async (req, res) => {
         message: "Failed to hash password",
       });
     }
+    if (!mongoose.Types.ObjectId.isValid(req.company.companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId Invalid!!",
+      });
+    }
 
-    const maleProfilePic = `https://avatar.iran.liara.run/public/boy?username=${fullName}`;
-    const femaleProfilePic = `https://avatar.iran.liara.run/public/girl?username=${fullName}`;
+    const maleProfilePic = `https://avatar.iran.liara.run/public/boy?username=${fullName.split(" ")[0]}`;
+    const femaleProfilePic = `https://avatar.iran.liara.run/public/girl?username=${fullName.split(" ")[0]}`;
 
     const user = await Employee.create({
       fullName,
@@ -94,6 +102,8 @@ export const employeeSignup = async (req, res) => {
       personalDetails,
       companyDetails,
       gender,
+      jobType,
+      company:req.company.companyId,
       profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
 
@@ -258,6 +268,12 @@ export const employeeResetPassword = async (req, res) => {
         message: "unauthorization token!",
       });
     }
+    if (!mongoose.Types.ObjectId.isValid(verifyToken.id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid token!!",
+      });
+    }
     const hashPassword = await bcrypt.hash(password, 12);
     const userUpdate = await Employee.findByIdAndUpdate(
       verifyToken.id,
@@ -331,6 +347,13 @@ export const updateEmployeeDetails = async (req, res) => {
       });
     }
 
+    if (!mongoose.Types.ObjectId.isValid(employeeId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid employeeId!!",
+      });
+    }
+
     const updateEmployee = await Employee.findByIdAndUpdate(
       employeeId,
       fieldsUpdate,
@@ -364,6 +387,13 @@ export const deleteEmployeeDetails = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "EmployyeId is required!!",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(employeeId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid employeeId!!",
       });
     }
 

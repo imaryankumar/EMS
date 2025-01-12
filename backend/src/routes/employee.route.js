@@ -11,10 +11,11 @@ import {
   updateEmployeeDetails,
 } from "../controllers/employee.controller.js";
 import AllowedRoles from "../middleware/AllowedRoles.js";
+import CompanyAuth from "../middleware/CompanyAuth.js";
 
 const router = express.Router();
 
-router.post("/signup", employeeSignup);
+router.post("/signup",CompanyAuth, employeeSignup);
 router.post("/login", employeeLogin);
 router.post("/logout", UserAuth, employeeLogout);
 router.post("/forgot", employeeForgotPassword);

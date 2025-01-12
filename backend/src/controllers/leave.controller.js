@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import LeaveRequest, { leaveTypes } from "../models/leaveRequest.model.js";
 
 export const applyLeaveForm = async (req, res) => {
@@ -65,6 +66,12 @@ export const updateLeaveStatus = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Invalid status! Status must be 'Approved' or 'Rejected'.",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(leaveRequestId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid leaveRequestId!!",
       });
     }
     const leaveRequest = await LeaveRequest.findById(leaveRequestId);
