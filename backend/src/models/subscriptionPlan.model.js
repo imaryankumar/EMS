@@ -9,11 +9,11 @@ const subscriptionSchema = new mongoose.Schema({
   employeeLimit: { type: Number, default: 50 },
   planType: {
     type: String,
-    enum: ["Free", "3-Month", "6-Month", "1-Year"],
+    enum: ["Free", "6-Month", "2-Year"],
     default: "Free",
   },
   startDate: { type: Date, default: Date.now },
-  endDate: { type: Date },
+  endDate: { type: Date, default: null },
   isActive: { type: Boolean, default: true },
 });
 
