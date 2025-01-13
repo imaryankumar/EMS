@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv"
+import cors from "cors"
 import ConnectDB from "./src/config/DBConnect.js";
 import cookieParser from "cookie-parser";
 import EmployeeRouter from "./src/routes/employee.route.js";
@@ -12,10 +13,17 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 dotenv.config();
 
+
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'], 
+}))
 
 // Routes
 app.use("/api/v1/employee", EmployeeRouter);

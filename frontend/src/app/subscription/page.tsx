@@ -9,37 +9,37 @@ const SubscriptionPlan = () => {
       features: [
         {
           id: 1,
-          planText: "Up to 50 employees.",
+          planText: "Up to 50 employees",
           info: "Great for small teams just getting started.",
         },
         {
           id: 2,
-          planText: "Basic attendance dashboard.",
+          planText: "Basic attendance dashboard",
           info: "Track attendance with a simple dashboard.",
         },
         {
           id: 3,
-          planText: "Basic leave approval.",
+          planText: "Basic leave approval",
           info: "Employees can apply for leave, managers approve.",
         },
         {
           id: 4,
-          planText: "HR & Manager roles.",
+          planText: "HR & Manager roles",
           info: "Assign basic roles for HR and Managers.",
         },
         {
           id: 5,
-          planText: "Track company assets.",
+          planText: "Track company assets",
           info: "Track assets with basic records.",
         },
         {
           id: 6,
-          planText: "Community support.",
+          planText: "Community support",
           info: "Access user forums for troubleshooting.",
         },
         {
           id: 7,
-          planText: "Free for small teams.",
+          planText: "Free for small teams",
           info: "Perfect for startups and small businesses.",
         },
       ],
@@ -52,37 +52,37 @@ const SubscriptionPlan = () => {
       features: [
         {
           id: 1,
-          planText: "Up to 200 employees.",
+          planText: "Up to 200 employees",
           info: "Support for growing teams and businesses.",
         },
         {
           id: 2,
-          planText: "WFH & leave tracking.",
+          planText: "WFH & leave tracking",
           info: "Track WFH days and leave approvals.",
         },
         {
           id: 3,
-          planText: "Multi-level approvals.",
+          planText: "Multi-level approvals",
           info: "Set approval hierarchy for leave requests.",
         },
         {
           id: 4,
-          planText: "Team Lead roles.",
+          planText: "Team Lead roles",
           info: "Assign team leads with limited access.",
         },
         {
           id: 5,
-          planText: "Asset assignment reports.",
+          planText: "Asset assignment reports",
           info: "Generate reports on asset distribution.",
         },
         {
           id: 6,
-          planText: "Priority support.",
+          planText: "Priority support",
           info: "Get faster responses with email support.",
         },
         {
           id: 7,
-          planText: "Affordable for growth.",
+          planText: "Affordable for growth",
           info: "Great value for businesses scaling up.",
         },
       ],
@@ -95,37 +95,37 @@ const SubscriptionPlan = () => {
       features: [
         {
           id: 1,
-          planText: "Up to 500 employees.",
+          planText: "Up to 500 employees",
           info: "Designed for large teams and enterprises.",
         },
         {
           id: 2,
-          planText: "Advanced attendance reports.",
+          planText: "Advanced attendance reports",
           info: "Detailed analytics on attendance trends.",
         },
         {
           id: 3,
-          planText: "Custom leave policies.",
+          planText: "Custom leave policies",
           info: "Create and automate custom leave workflows.",
         },
         {
           id: 4,
-          planText: "Custom roles & permissions.",
+          planText: "Custom roles & permissions",
           info: "Fully customizable roles for your organization.",
         },
         {
           id: 5,
-          planText: "Advanced asset management.",
+          planText: "Advanced asset management",
           info: "Track and analyze large volumes of assets.",
         },
         {
           id: 6,
-          planText: "24/7 dedicated support.",
+          planText: "24/7 dedicated support",
           info: "Access support at any time, day or night.",
         },
         {
           id: 7,
-          planText: "Enterprise features.",
+          planText: "Enterprise features",
           info: "Unlock premium features for large enterprises.",
         },
       ],

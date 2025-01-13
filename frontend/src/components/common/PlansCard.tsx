@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 
 const PlansCard = ({ title, plans, price, btnText, bgBtnColor }: any) => {
-  const isPresent = ["24/7 dedicated support.", "Multi-level approvals."]
+  const isPresent = ["24/7 dedicated support", "Multi-level approvals","Custom roles & permissions"]
   return (
     <div
       className={`w-full h-[32rem] sm:h-[35rem] border rounded-md flex flex-col items-start justify-between p-4 md:p-6 lg:p-8 shadow-xl bg-white text-black `}>
