@@ -26,7 +26,15 @@ import axios from "axios";
 type FormField = {
   name: string;
   label: string;
-  type: "text" | "email" | "tel" | "password" | "select" | "textarea" | "date" | "number";
+  type:
+    | "text"
+    | "email"
+    | "tel"
+    | "password"
+    | "select"
+    | "textarea"
+    | "date"
+    | "number";
   options?: string[];
 };
 
@@ -35,19 +43,48 @@ const formFields: FormField[] = [
   { name: "email", label: "Email", type: "email" },
   { name: "phoneNumber", label: "Phone Number", type: "tel" },
   { name: "password", label: "Password", type: "password" },
-  { name: "role", label: "Role", type: "select", options: ["admin", "hr", "team-lead", "employee", "manager", "intern"] },
-  { name: "jobType", label: "Job Type", type: "select", options: ["on-site", "remote"] },
+  {
+    name: "role",
+    label: "Role",
+    type: "select",
+    options: ["admin", "hr", "team-lead", "employee", "manager", "intern"],
+  },
+  {
+    name: "jobType",
+    label: "Job Type",
+    type: "select",
+    options: ["on-site", "remote"],
+  },
   { name: "designation", label: "Designation", type: "text" },
   { name: "department", label: "Department", type: "text" },
   { name: "dateOfBirth", label: "Date of Birth", type: "date" },
-  { name: "dateOfJoining", label: "Date of Joining", type: "date" },  
+  { name: "dateOfJoining", label: "Date of Joining", type: "date" },
   { name: "leaveBalance", label: "Leave Balance", type: "number" },
-  { name: "employmentStatus", label: "Employment Status", type: "select", options: ["active", "inactive"] },
+  {
+    name: "employmentStatus",
+    label: "Employment Status",
+    type: "select",
+    options: ["active", "inactive"],
+  },
   { name: "emergencyContact", label: "Emergency Contact", type: "tel" },
-  { name: "maritalStatus", label: "Marital Status", type: "select", options: ["single", "married", "divorced"] },
-  { name: "gender", label: "Gender", type: "select", options: ["male", "female", "other"] },
+  {
+    name: "maritalStatus",
+    label: "Marital Status",
+    type: "select",
+    options: ["single", "married", "divorced"],
+  },
+  {
+    name: "gender",
+    label: "Gender",
+    type: "select",
+    options: ["male", "female", "other"],
+  },
   { name: "address", label: "Address", type: "textarea" },
-  { name: "probationPeriod", label: "Probation Period (Months)", type: "number" },
+  {
+    name: "probationPeriod",
+    label: "Probation Period (Months)",
+    type: "number",
+  },
   { name: "reportingManager", label: "Reporting Manager", type: "text" },
 ];
 
@@ -76,7 +113,9 @@ const Signup = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<any>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setUserDetail((prevState: any) => ({
       ...prevState,
@@ -94,7 +133,11 @@ const Signup = () => {
   const validateForm = () => {
     let validationErrors: any = {};
     formFields.forEach((field) => {
-      if (field.type !== "select" && field.type !== "textarea" && !userDetail[field.name]) {
+      if (
+        field.type !== "select" &&
+        field.type !== "textarea" &&
+        !userDetail[field.name]
+      ) {
         validationErrors[field.name] = `${field.label} is required`;
       }
     });
@@ -121,7 +164,7 @@ const Signup = () => {
       jobType: userDetail.jobType,
       designation: userDetail.designation,
       department: userDetail.department,
-      dateOfJoining: userDetail.dateOfJoining, 
+      dateOfJoining: userDetail.dateOfJoining,
       leaveBalance: userDetail.leaveBalance,
       employmentStatus: userDetail.employmentStatus,
       personalDetails: {
@@ -138,7 +181,10 @@ const Signup = () => {
     };
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/signup`, payload);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/signup`,
+        payload
+      );
       console.log("Form submitted successfully:", response.data);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -159,8 +205,7 @@ const Signup = () => {
             key={field.name}
             name={field.name}
             value={userDetail[field.name]}
-            onValueChange={(value) => handleSelectChange(field.name, value)}
-          >
+            onValueChange={(value) => handleSelectChange(field.name, value)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={field.label} />
             </SelectTrigger>
@@ -210,7 +255,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center px-4 py-8">
+    <div className="w-full h-screen flex items-center justify-center px-4 py-8">
       <Card className="w-[950px]">
         <CardHeader>
           <CardTitle className="text-2xl">Create an account</CardTitle>
@@ -226,7 +271,9 @@ const Signup = () => {
                   <Label htmlFor={field.name}>{field.label}</Label>
                   {renderField(field)}
                   {errors[field.name] && (
-                    <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors[field.name]}
+                    </p>
                   )}
                 </div>
               ))}
