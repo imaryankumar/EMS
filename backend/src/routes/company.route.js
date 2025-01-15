@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.post("/signup", companySignup);
 router.post("/login", companyLogin);
-router.post("/logout",CompanyAuth,companyLogout);
-router.patch("/access-verify/:companyId",CompanyAuth, companyVerified);
-router.put("/update-details/:companyId",CompanyAuth,companyProfileUpdate);
-router.delete("/delete-details/:companyId",CompanyAuth,companyDeleteDetails);
+router.post("/logout", CompanyAuth, companyLogout);
+router.patch("/access-verify/:companyId", companyVerified);
+router.put("/update-details/:companyId", CompanyAuth, companyProfileUpdate);
+router.delete("/delete-details/:companyId", CompanyAuth, companyDeleteDetails);
 
 export default router;

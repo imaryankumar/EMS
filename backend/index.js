@@ -20,21 +20,23 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later.",
 });
 
-
-const allowedOrigins = process.env.NODE_ENV === "production"
-  ? ['https://yourfrontend.com']
-  : ['http://localhost:3000']; 
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? ["https://yourfrontend.com"]
+    : ["http://localhost:3001"];
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(limiter);
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'], 
-}))
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 // Routes
 app.use("/api/v1/employee", EmployeeRouter);
@@ -46,7 +48,7 @@ app.use("/api/v1/subscription", SubscriptionRouter);
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send({ message: 'Something went wrong!' });
+  res.status(500).send({ message: "Something went wrong!" });
 });
 
 // Server
