@@ -1,5 +1,6 @@
 "use client";
 
+import Cookies from "js-cookie";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
@@ -93,9 +94,30 @@ const Login = () => {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/company/login`,
         payload
       );
-      toast.success("Login successful!");
-      setFormData({ companyEmail: "", phoneNumber: "" });
-      router.push("/");
+
+      if (response.data?.success) {
+        const token = response.data.token;
+
+        Cookies.set("authToken", token, {
+          expires: 7,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        });
+
+        toast.success("Login successful!", {
+          id: "success-toast",
+        });
+
+        setFormData({ companyEmail: "", phoneNumber: "" });
+        router.push("/");
+      } else {
+        toast.error(
+          response.data?.message || "Login failed. Please try again.",
+          {
+            id: "error-toast",
+          }
+        );
+      }
     } catch (error: any) {
       const apiErrorMessage =
         error?.response?.data?.message ||

@@ -122,16 +122,26 @@ const Signup = () => {
         payload
       );
 
-      toast.success("Signup successful!");
-      setFormData({
-        companyName: "",
-        companyEmail: "",
-        phoneNumber: "",
-        address: "",
-        gstNumber: "",
-      });
-      setErrors({});
-      router.push("/");
+      if (response.data?.success) {
+        toast.success("Signup successful!", {
+          id: "success-message",
+        });
+
+        setFormData({
+          companyName: "",
+          companyEmail: "",
+          phoneNumber: "",
+          address: "",
+          gstNumber: "",
+        });
+
+        setErrors({});
+        router.push("/login");
+      } else {
+        toast.error("Signup failed. Please try again.", {
+          id: "failure-message",
+        });
+      }
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||
