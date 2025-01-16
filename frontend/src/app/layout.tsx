@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto_Mono, Roboto_Serif } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import ClientWrapper from "@/layout/ClientWrapper";
 
 const geistSans = Roboto_Serif({
   variable: "--font-geist-sans",
@@ -27,8 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Toaster reverseOrder={false} />
-        {children}
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );
