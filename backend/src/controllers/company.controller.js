@@ -88,7 +88,7 @@ export const companyLogin = async (req, res) => {
     if (!companyExist) {
       return res.status(400).json({
         success: false,
-        message: "email or phone number not valid!!",
+        message: "No account found with this email or phone no.",
       });
     }
 
