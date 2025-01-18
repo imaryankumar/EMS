@@ -1,11 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
+import getUserProfile from "./userDetailSlice/userDetailSlice"
 
-const emptyReducer = (state = {}) => state;
 
 export const store = configureStore({
   reducer: {
-    empty: emptyReducer,
+    getProfileDetail:getUserProfile ,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ["*"],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

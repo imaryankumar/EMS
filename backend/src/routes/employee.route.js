@@ -8,6 +8,7 @@ import {
   employeeLogout,
   employeeResetPassword,
   employeeSignup,
+  getEmployeeDetail,
   updateEmployeeDetails,
 } from "../controllers/employee.controller.js";
 import AllowedRoles from "../middleware/AllowedRoles.js";
@@ -20,6 +21,7 @@ router.post("/login", employeeLogin);
 router.post("/logout", UserAuth, employeeLogout);
 router.post("/forgot", employeeForgotPassword);
 router.patch("/reset/:tokenId", employeeResetPassword);
+router.get("/single",UserAuth,getEmployeeDetail);
 
 router.patch(
   "/:employeeId",

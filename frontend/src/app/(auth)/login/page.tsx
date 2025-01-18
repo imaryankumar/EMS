@@ -36,7 +36,7 @@ const Login: React.FC = () => {
       return;
     }
     const payload = {
-      companyEmail: userDetails.email,
+      email: userDetails.email,
       phoneNumber: userDetails.phoneNumber,
       password: userDetails.password,
     };
@@ -44,11 +44,11 @@ const Login: React.FC = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/company/login`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/login`,
         payload
       );
       if (res?.data?.success) {
-        StoreCookies("companyToken", res?.data?.token);
+        StoreCookies("userToken", res?.data?.token);
         setUserDetails({
           email: "",
           password: "",
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
     <div className="w-full h-screen">
       <div className="w-full h-full flex">
         <div className="w-3/5 h-full bg-cover bg-no-repeat bg-custom-login" />
-        <div className="w-2/5 h-full flex flex-col gap-8 items-center justify-center px-16 ">
+        <div className="w-2/5 h-full flex flex-col gap-8 items-center justify-center px-12 ">
           <div className="w-28 h-28">
             <Image src={Logo} alt="Logo" className="rounded object-cover" />
           </div>
@@ -87,10 +87,10 @@ const Login: React.FC = () => {
             </h1>
           </div>
           <form
-            className="w-full flex flex-col justify-center gap-4 shadow rounded-md border p-4"
+            className="w-full max-w-sm flex flex-col justify-center gap-4 shadow rounded-md border p-4"
             onSubmit={onFormSubmitHandler}
           >
-            <h2 className="font-semibold text-2xl py-1">Login</h2>
+            <h2 className="font-semibold text-2xl pb-1">Login</h2>
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -125,6 +125,9 @@ const Login: React.FC = () => {
                 >
                   {isShowPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </span>
+                <span className="text-cyan-500 absolute cursor-pointer hover:underline right-0 py-1 text-sm">
+                  Forgot password
+                </span>
               </div>
             </div>
             <div className="grid w-full items-center gap-1.5">
@@ -149,12 +152,6 @@ const Login: React.FC = () => {
                 {isLoading ? "Loading.." : "Sign in"}
               </Button>
             </div>
-            <p className="text-gray-400 text-center">
-              Don't have an account yet?{" "}
-              <span className="text-cyan-500 cursor-pointer hover:underline">
-                Create an account
-              </span>
-            </p>
           </form>
         </div>
       </div>

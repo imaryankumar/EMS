@@ -7,7 +7,7 @@ const employeeSchema = new mongoose.Schema(
     employeeId: { type: String, required: true, unique: true, index: true },
     address: { type: String, required: true },
     phoneNumber: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: true, minlength: [6, "Password must be at least 6 characters long"] },
     role: {
       type: String,
       enum: ["Admin", "HR", "Team Lead", "Employee", "Manager", "Intern"],
@@ -24,7 +24,7 @@ const employeeSchema = new mongoose.Schema(
     },
     designation: { type: String, required: true },
     department: { type: String, required: true },
-    reportingManager: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+    reportingManager: { type: mongoose.Schema.Types.ObjectId, ref: "Employee",default:null },
     dateOfJoining: { type: Date, required: true, default: Date.now },
     leaveBalance: { type: Number, default: 24 },
     assets: [{ type: mongoose.Schema.Types.ObjectId, ref: "Asset" }],

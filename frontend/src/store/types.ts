@@ -7,3 +7,9 @@ export interface CompanyAuth {
   isError: any;
   companyId: any;
 }
+
+export interface UserDetails{
+  isLoading:boolean,
+  isError:any,
+  userDetails:any
+}

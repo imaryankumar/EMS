@@ -22,10 +22,11 @@ export const employeeSignup = async (req, res) => {
       personalDetails,
       companyDetails,
       profilePic,
+      reportingManager,
       gender,
       jobType
     } = req.body;
-
+  
     if (
       !fullName ||
       !email ||
@@ -49,6 +50,13 @@ export const employeeSignup = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "All fields are required!",
+      });
+    }
+
+    if(password.length < 6){
+      return res.status(400).json({
+        success: false,
+        message: "password must be 6 length",
       });
     }
 
@@ -103,6 +111,7 @@ export const employeeSignup = async (req, res) => {
       companyDetails,
       gender,
       jobType,
+      reportingManager,
       company:req.company.companyId,
       profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
@@ -123,20 +132,26 @@ export const employeeSignup = async (req, res) => {
 
 export const employeeLogin = async (req, res) => {
   try {
-    const { email, phoneNumber, password, role } = req.body;
-    if (!email || !phoneNumber || !password || !role) {
+    const { email, phoneNumber, password } = req.body;
+    if (!email || !phoneNumber || !password) {
       return res.status(400).json({
         success: false,
         message: "All Fields are Required!!",
       });
     }
+    if(password.length < 6){
+      return res.status(400).json({
+        success: false,
+        message: "password must be 6 length",
+      });
+    };
     const isEmployeeExist = await Employee.findOne({ email });
     if (!isEmployeeExist) {
       return res.status(400).json({
         success: false,
         message: "Employee doesn't register!!",
       });
-    }
+    };
 
     if (isEmployeeExist.phoneNumber !== phoneNumber) {
       return res.status(403).json({
@@ -145,12 +160,12 @@ export const employeeLogin = async (req, res) => {
       });
     }
 
-    if (isEmployeeExist.role !== role) {
-      return res.status(403).json({
-        success: false,
-        message: `Access denied for role: ${role}.`,
-      });
-    }
+    // if (isEmployeeExist.role !== role) {
+    //   return res.status(403).json({
+    //     success: false,
+    //     message: `Access denied for role: ${role}.`,
+    //   });
+    // }
 
     const isComparePassword = await bcrypt.compare(
       password,
@@ -191,6 +206,39 @@ export const employeeLogout = async (req, res) => {
     });
   } catch (error) {
     console.error(error?.message || "Error in Logout controller");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const getEmployeeDetail = async(req,res)=>{
+  try {
+    const userId = req.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid employeeId!!",
+      });
+    }
+
+    const getUserProfile = await Employee.findById(userId).select("-password");
+
+    if (!getUserProfile) {
+      return res.status(400).json({
+        success: false,
+        message: "Employee details not found!!",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Employee Detail successfully",
+      getUserProfile
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in getEmployeeDetail controller");
     return res.status(500).json({
       success: false,
       message: "Internal Server Error!",
