@@ -7,7 +7,9 @@ import {
   CalendarCheck,
   PieChart,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import Logo from "../../../public/images/logoicon.png";
 import { useState } from "react";
 
 interface Route {
@@ -65,8 +67,16 @@ const ASidebar = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full flex flex-col items-start justify-start gap-10 py-6 px-8">
-        <h3 className="text-2xl font-semibold">Track Force</h3>
+      <div className="w-full h-full flex flex-col items-start justify-start gap-10 py-4 px-8">
+        <div className="relative">
+          <Image
+            src={Logo}
+            alt="Logo"
+            width={200}
+            height={200}
+            className="blend-image"
+          />
+        </div>
         <div className="flex flex-col gap-3 w-full h-full">
           {routes.map((route) => (
             <Link key={route?.id} href={route?.url}>

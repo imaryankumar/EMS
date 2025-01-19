@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Logo from "../../../../public/images/trackforce.webp";
+import Logo from "../../../../public/images/logoicon.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -74,11 +74,17 @@ const Login: React.FC = () => {
       <div className="w-full h-full flex flex-col lg:flex-row ">
         <div className="w-full lg:w-3/5 h-1/2 md:h-3/4 lg:h-full bg-cover bg-no-repeat bg-custom-login" />
         <div className="w-full lg:w-2/5 h-full flex flex-col gap-8 items-center justify-center px-4 lg:px-12 ">
-          <div className="w-20 lg:w-28 h-20 lg:h-28">
-            <Image src={Logo} alt="Logo" className="rounded object-cover" />
+          <div className="relative">
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={250}
+              height={250}
+              className="blend-image"
+            />
           </div>
           <div className="flex flex-col items-center">
-            <h1 className="font-sans text-2xl text-center">
+            <h1 className="font-sans text-3xl text-center">
               Powering{" "}
               <span className="text-cyan-500 font-semibold">
                 Workforce Efficiency

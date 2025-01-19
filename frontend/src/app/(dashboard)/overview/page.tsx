@@ -3,7 +3,7 @@ import React from "react";
 const Overview = () => {
   return (
     <div className="w-full h-full flex felx-col">
-      <p className="text-2xl">
+      <p className="text-2xl w-full">
         Hi,
         <span className="font-semibold"> Aryan Kumar</span> Welcome to EZ Works
       </p>
