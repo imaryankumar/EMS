@@ -1,7 +1,4 @@
 "use client";
-
-import Dashboard from "@/components/Dashboard/Dashboard";
-import DashboardLayout from "@/components/Dashboard/layout";
 import { GetCookies } from "@/helper/CookieStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -18,9 +15,7 @@ const Home = () => {
 
   return (
     <>
-      <DashboardLayout>
-        <Dashboard />
-      </DashboardLayout>
+      <h1>Hello</h1>
     </>
   );
 };

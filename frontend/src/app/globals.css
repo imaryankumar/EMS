@@ -4,7 +4,8 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: azure;
+  background-color: white;
+  color: black;
 }
 
 @layer base {

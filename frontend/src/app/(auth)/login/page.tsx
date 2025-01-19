@@ -55,7 +55,7 @@ const Login: React.FC = () => {
           phoneNumber: "",
         });
         toast.success(res?.data?.message);
-        router.push("/");
+        router.push("/dashboard");
       } else {
         console.error("Something went wrong");
       }
@@ -71,10 +71,10 @@ const Login: React.FC = () => {
   };
   return (
     <div className="w-full h-screen">
-      <div className="w-full h-full flex">
-        <div className="w-3/5 h-full bg-cover bg-no-repeat bg-custom-login" />
-        <div className="w-2/5 h-full flex flex-col gap-8 items-center justify-center px-12 ">
-          <div className="w-28 h-28">
+      <div className="w-full h-full flex flex-col lg:flex-row ">
+        <div className="w-full lg:w-3/5 h-1/2 md:h-3/4 lg:h-full bg-cover bg-no-repeat bg-custom-login" />
+        <div className="w-full lg:w-2/5 h-full flex flex-col gap-8 items-center justify-center px-4 lg:px-12 ">
+          <div className="w-20 lg:w-28 h-20 lg:h-28">
             <Image src={Logo} alt="Logo" className="rounded object-cover" />
           </div>
           <div className="flex flex-col items-center">
