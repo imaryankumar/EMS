@@ -523,15 +523,17 @@ export const allEmployeeDetails = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Employee details fetched successfully",
-      totalEmployee: {
-        totalEmployCount,
-        maleCount,
-        femaleCount,
-        recentCount,
+      allDetails: {
+        totalEmployee: {
+          totalEmployCount,
+          maleCount,
+          femaleCount,
+          recentCount,
+        },
+        currentPage: page,
+        totalPage: Math.ceil(totalEmployCount / limit),
+        employees: allEmployee,
       },
-      currentPage: page,
-      totalPage: Math.ceil(totalEmployCount / limit),
-      employees: allEmployee,
     });
   } catch (error) {
     console.error(error?.message || "Error in all employee profile controller");

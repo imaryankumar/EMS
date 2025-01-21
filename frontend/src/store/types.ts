@@ -8,8 +8,9 @@ export interface CompanyAuth {
   companyId: any;
 }
 
-export interface UserDetails{
-  isLoading:boolean,
-  isError:any,
-  userDetails:any
+export interface UserDetails {
+  isLoading: boolean;
+  isError: any;
+  userDetails: any;
+  getAllProfiles: any;
 }
