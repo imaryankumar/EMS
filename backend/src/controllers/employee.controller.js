@@ -24,9 +24,9 @@ export const employeeSignup = async (req, res) => {
       profilePic,
       reportingManager,
       gender,
-      jobType
+      jobType,
     } = req.body;
-  
+
     if (
       !fullName ||
       !email ||
@@ -44,7 +44,7 @@ export const employeeSignup = async (req, res) => {
       !personalDetails?.maritalStatus ||
       !companyDetails?.probationPeriod ||
       !companyDetails?.contractType ||
-      !gender||
+      !gender ||
       !jobType
     ) {
       return res.status(400).json({
@@ -53,7 +53,7 @@ export const employeeSignup = async (req, res) => {
       });
     }
 
-    if(password.length < 6){
+    if (password.length < 6) {
       return res.status(400).json({
         success: false,
         message: "password must be 6 length",
@@ -112,7 +112,7 @@ export const employeeSignup = async (req, res) => {
       gender,
       jobType,
       reportingManager,
-      company:req.company.companyId,
+      company: req.company.companyId,
       profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
 
@@ -139,19 +139,19 @@ export const employeeLogin = async (req, res) => {
         message: "All Fields are Required!!",
       });
     }
-    if(password.length < 6){
+    if (password.length < 6) {
       return res.status(400).json({
         success: false,
         message: "password must be 6 length",
       });
-    };
+    }
     const isEmployeeExist = await Employee.findOne({ email });
     if (!isEmployeeExist) {
       return res.status(400).json({
         success: false,
         message: "Employee doesn't register!!",
       });
-    };
+    }
 
     if (isEmployeeExist.phoneNumber !== phoneNumber) {
       return res.status(403).json({
@@ -213,7 +213,7 @@ export const employeeLogout = async (req, res) => {
   }
 };
 
-export const getEmployeeDetail = async(req,res)=>{
+export const getEmployeeDetail = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -235,7 +235,7 @@ export const getEmployeeDetail = async(req,res)=>{
     return res.status(200).json({
       success: true,
       message: "Employee Detail successfully",
-      getUserProfile
+      getUserProfile,
     });
   } catch (error) {
     console.error(error?.message || "Error in getEmployeeDetail controller");
@@ -477,6 +477,9 @@ export const allEmployeeDetails = async (req, res) => {
       reportingManager,
     } = req.query;
 
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
     // if (designation) filterCriteria.designation = designation;
     // if (department) filterCriteria.department = department;
     // if (role) filterCriteria.role = role;
@@ -510,10 +513,22 @@ export const allEmployeeDetails = async (req, res) => {
         message: "No employees found with the given criteria.",
       });
     }
+
+    const maleCount = (await Employee.find({ gender: "male" })).length;
+    const femaleCount = (await Employee.find({ gender: "female" })).length;
+    const recentCount = (
+      await Employee.find({ createdAt: { $gte: oneMonthAgo } })
+    ).length;
+
     return res.status(200).json({
       success: true,
       message: "Employee details fetched successfully",
-      totalEmployee: totalEmployCount,
+      totalEmployee: {
+        totalEmployCount,
+        maleCount,
+        femaleCount,
+        recentCount,
+      },
       currentPage: page,
       totalPage: Math.ceil(totalEmployCount / limit),
       employees: allEmployee,
