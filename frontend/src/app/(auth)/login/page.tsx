@@ -55,7 +55,7 @@ const Login: React.FC = () => {
           phoneNumber: "",
         });
         toast.success(res?.data?.message);
-        router.push("/dashboard");
+        router.push("/overview");
       } else {
         console.error("Something went wrong");
       }
@@ -94,8 +94,7 @@ const Login: React.FC = () => {
           </div>
           <form
             className="w-full max-w-sm flex flex-col justify-center gap-4 shadow rounded-md border p-4"
-            onSubmit={onFormSubmitHandler}
-          >
+            onSubmit={onFormSubmitHandler}>
             <h2 className="font-semibold text-2xl pb-1">Login</h2>
             <div className="grid w-full items-center gap-1.5">
               <Label htmlFor="email">Email</Label>
@@ -127,8 +126,7 @@ const Login: React.FC = () => {
                 />
                 <span
                   className="absolute right-4 top-2.5 cursor-pointer"
-                  onClick={() => setIsShowPassword((prev) => !prev)}
-                >
+                  onClick={() => setIsShowPassword((prev) => !prev)}>
                   {isShowPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </span>
                 <span className="text-cyan-500 absolute cursor-pointer hover:underline right-0 py-1 text-sm">
@@ -153,8 +151,7 @@ const Login: React.FC = () => {
             <div className="w-full pt-2">
               <Button
                 className="w-full cursor-pointer disabled:opacity-90"
-                disabled={isLoading}
-              >
+                disabled={isLoading}>
                 {isLoading ? "Loading.." : "Sign in"}
               </Button>
             </div>

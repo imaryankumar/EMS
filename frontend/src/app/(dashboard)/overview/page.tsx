@@ -1,69 +1,86 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Users, UserPlus, UserCheck, UserMinus } from "lucide-react";
-import { it } from "node:test";
+"use client";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
+import SelectDropdown from "@/components/common/SelectDropdown";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { GetCookies } from "@/helper/CookieStore";
+import EmployeCard from "@/components/Dashboard/EmployeCard";
+import ProfileCard from "@/components/Dashboard/ProfileCard";
 
 const Overview = () => {
-  const employeeStats = [
-    {
-      id: 1,
-      icon: <Users />,
-      count: 1,
-      label: "Total Employees",
-      bgColor: "bg-blue-500",
-    },
-    {
-      id: 2,
-      icon: <UserPlus />,
-      count: 1,
-      label: "New Employees",
-      bgColor: "bg-red-500",
-    },
-    {
-      id: 3,
-      icon: <UserCheck />,
-      count: 1,
-      label: "Male Employees",
-      bgColor: "bg-yellow-500",
-    },
-    {
-      id: 4,
-      icon: <UserMinus />,
-      count: 1,
-      label: "Female Employees",
-      bgColor: "bg-sky-400",
-    },
-  ];
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = GetCookies("userToken");
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
+
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/all`,
+      {
+        withCredentials: true,
+      }
+    );
+    const data = await response.data;
+    return data;
+  };
+
+  const { isError, isLoading, data } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchData,
+    staleTime: 10000,
+  });
+
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleSelectChange = (value: string) => {
+    setSelectedOption(value);
+  };
+
+  if (isError) {
+    return <>Error Found!!</>;
+  }
 
   return (
-    <div className="w-full h-full flex flex-col gap-4">
+    <div className="w-full h-full flex flex-col gap-10">
       <p className="text-2xl w-full">
         Hi,
         <span className="font-semibold"> Aryan Kumar</span> Welcome to EZ Works
       </p>
-      <div className="w-full flex gap-3">
-        {employeeStats.map((item) => (
-          <div key={item?.id} className="w-full h-auto">
-            <Card
-              className={`shadow-md hover:shadow-lg  border border-gray-200 transition-shadow duration-300 ${item?.bgColor}`}>
-              <CardContent className="p-0">
-                <div className="flex items-center justify-center gap-4 px-4 py-8">
-                  <span className="text-xl border bg-white p-1 rounded">
-                    {item?.icon}
-                  </span>
-                  <div className="flex flex-col items-start gap-1">
-                    <span className="text-lg font-semibold text-gray-700">
-                      {item?.label}
-                    </span>
-                    <span className="text-lg font-bold text-gray-900">
-                      {item?.count}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+      <EmployeCard userCount={data?.allDetails?.totalEmployee} />
+      <div className="w-full flex items-center justify-start gap-6">
+        <div className="w-80">
+          <Input type="text" placeholder="Search name" className="py-6" />
+        </div>
+        <div className="w-72">
+          <SelectDropdown
+            name="Select Status"
+            label="Status"
+            items={["option1"]}
+            selectedValue={selectedOption}
+            onChange={handleSelectChange}
+          />
+        </div>
+        <div className="w-72">
+          <SelectDropdown
+            name="Select Priority"
+            label="Priority"
+            items={["option1"]}
+            selectedValue={selectedOption}
+            onChange={handleSelectChange}
+          />
+        </div>
+        <div className="p-3 bg-black text-white  rounded-lg cursor-pointer">
+          <Search />
+        </div>
       </div>
+      <ProfileCard data={data} isLoading={isLoading} isError={isError} />
     </div>
   );
 };

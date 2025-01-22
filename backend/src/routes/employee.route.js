@@ -16,12 +16,12 @@ import CompanyAuth from "../middleware/CompanyAuth.js";
 
 const router = express.Router();
 
-router.post("/signup",CompanyAuth, employeeSignup);
+router.post("/signup", CompanyAuth, employeeSignup);
 router.post("/login", employeeLogin);
 router.post("/logout", UserAuth, employeeLogout);
 router.post("/forgot", employeeForgotPassword);
 router.patch("/reset/:tokenId", employeeResetPassword);
-router.get("/single",UserAuth,getEmployeeDetail);
+router.get("/single", UserAuth, getEmployeeDetail);
 
 router.patch(
   "/:employeeId",
@@ -35,6 +35,6 @@ router.delete(
   AllowedRoles(["HR", "Admin"]),
   deleteEmployeeDetails
 );
-router.get("/all", allEmployeeDetails);
+router.get("/all", UserAuth, allEmployeeDetails);
 
 export default router;

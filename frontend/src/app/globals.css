@@ -7,8 +7,25 @@ body {
   background-color: white;
   color: black;
 }
-.blend-image {
+/* .blend-image {
   mix-blend-mode: hard-light;
+} */
+
+.scrollbar {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 2px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
 }
 
 @layer base {

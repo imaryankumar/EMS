@@ -11,7 +11,7 @@ import AssetRouter from "./src/routes/asset.route.js";
 import SubscriptionRouter from "./src/routes/subscription.route.js";
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 dotenv.config();
 
 const limiter = rateLimit({

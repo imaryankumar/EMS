@@ -502,6 +502,9 @@ export const allEmployeeDetails = async (req, res) => {
       };
 
     const allEmployee = await Employee.find(filterCriteria)
+      .select(
+        "_id fullName email employeeId designation profilePic phoneNumber dateOfJoining role"
+      )
       .skip((page - 1) * limit)
       .limit(Number(limit));
 
