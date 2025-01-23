@@ -84,8 +84,7 @@ const ASidebar = () => {
                 onClick={() => handleRouteChange(route.id)}
                 className={`flex items-center justify-start gap-3 py-1 px-2 cursor-pointer rounded hover:bg-slate-300 ${
                   activeRouteId === route?.id ? "bg-slate-300" : ""
-                }`}
-              >
+                }`}>
                 <span>{route?.icon}</span>
                 <span className="text-lg font-semibold capitalize">
                   {route?.label}

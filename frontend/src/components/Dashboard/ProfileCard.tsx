@@ -18,25 +18,24 @@ const ProfileCard = ({ isLoading, isError, data }: any) => {
       });
     }
   };
+  const employeeCount = data?.allDetails?.employees?.length || 10;
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 h-[30rem] overflow-auto scrollbar pr-2">
       {isLoading ? (
-        Array.from({ length: data?.allDetails?.employees?.length || 6 }).map(
-          (_, index) => (
-            <Card
-              key={index}
-              className="w-full gap-4 h-72 shadow-md border border-gray-200">
-              <CardContent className="p-6 w-full h-full flex flex-col items-center justify-start gap-4">
-                <Skeleton className="w-16 h-16 rounded-full" />
-                <Skeleton className="w-32 h-6" />
-                <Skeleton className="w-24 h-5" />
-                <Skeleton className="w-52 h-5" />
-                <Skeleton className="w-52 h-5" />
-                <Skeleton className="w-52 h-8" />
-              </CardContent>
-            </Card>
-          )
-        )
+        Array.from({ length: employeeCount }).map((_, index) => (
+          <Card
+            key={index}
+            className="w-full gap-4 h-72 shadow-md border border-gray-200">
+            <CardContent className="p-6 w-full h-full flex flex-col items-center justify-start gap-4">
+              <Skeleton className="w-16 h-16 rounded-full" />
+              <Skeleton className="w-32 h-6" />
+              <Skeleton className="w-24 h-5" />
+              <Skeleton className="w-52 h-5" />
+              <Skeleton className="w-52 h-5" />
+              <Skeleton className="w-52 h-8" />
+            </CardContent>
+          </Card>
+        ))
       ) : data?.allDetails?.employees?.length > 0 ? (
         data?.allDetails.employees.map((employee: any) => (
           <Card

@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { GetCookies } from "@/helper/CookieStore";
 import EmployeCard from "@/components/Dashboard/EmployeCard";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Overview = () => {
   const router = useRouter();
@@ -31,9 +32,30 @@ const Overview = () => {
     return data;
   };
 
+  const fetchSingleData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/single`,
+      {
+        withCredentials: true,
+      }
+    );
+    const data = await response.data;
+    return data;
+  };
+
   const { isError, isLoading, data } = useQuery({
     queryKey: ["users"],
     queryFn: fetchData,
+    staleTime: 10000,
+  });
+
+  const {
+    isError: singleUserError,
+    isLoading: singleUserLoading,
+    data: singleUserData,
+  } = useQuery({
+    queryKey: ["single"],
+    queryFn: fetchSingleData,
     staleTime: 10000,
   });
 
@@ -43,16 +65,27 @@ const Overview = () => {
     setSelectedOption(value);
   };
 
-  if (isError) {
+  if (isError || singleUserError) {
     return <>Error Found!!</>;
   }
 
   return (
     <div className="w-full h-full flex flex-col gap-10">
-      <p className="text-2xl w-full">
-        Hi,
-        <span className="font-semibold"> Aryan Kumar</span> Welcome to EZ Works
-      </p>
+      {singleUserLoading ? (
+        <Skeleton className="w-1/2 h-9" />
+      ) : (
+        <p className="text-3xl w-full">
+          Hi,
+          <span className="font-semibold text-cyan-500">
+            {" "}
+            {singleUserData?.getUserProfile?.fullName}!!
+          </span>{" "}
+          Welcome to{" "}
+          <span className="font-semibold text-cyan-500">
+            {singleUserData?.companyDetails?.companyName}
+          </span>
+        </p>
+      )}
       <EmployeCard userCount={data?.allDetails?.totalEmployee} />
       <div className="w-full flex items-center justify-start gap-6">
         <div className="w-80">
@@ -62,6 +95,15 @@ const Overview = () => {
           <SelectDropdown
             name="Select Status"
             label="Status"
+            items={["option1"]}
+            selectedValue={selectedOption}
+            onChange={handleSelectChange}
+          />
+        </div>
+        <div className="w-72">
+          <SelectDropdown
+            name="Select Priority"
+            label="Priority"
             items={["option1"]}
             selectedValue={selectedOption}
             onChange={handleSelectChange}

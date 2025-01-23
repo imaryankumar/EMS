@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Roboto_Mono, Roboto_Serif } from "next/font/google";
 import "./globals.css";
 import ClientWrapper from "@/layout/ClientWrapper";
-
 const geistSans = Roboto_Serif({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ClientWrapper>

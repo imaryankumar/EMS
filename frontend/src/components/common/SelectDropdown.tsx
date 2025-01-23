@@ -19,7 +19,7 @@ const SelectDropdown = ({
   label: string;
   items: string[];
   onChange: (value: string) => void;
-  selectedValue: string;
+  selectedValue: any;
 }) => {
   return (
     <Select>

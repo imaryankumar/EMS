@@ -4,6 +4,7 @@ import Employee from "../models/employee.model.js";
 import UserToken from "../libs/userToken.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import Company from "../models/company.model.js";
 
 export const employeeSignup = async (req, res) => {
   try {
@@ -183,6 +184,7 @@ export const employeeLogin = async (req, res) => {
       success: true,
       message: "Login Successfully",
       token,
+      username: isEmployeeExist.fullName.replace(" ", "_"),
     });
   } catch (error) {
     console.error(error?.message || "Error on Login Controller");
@@ -225,6 +227,16 @@ export const getEmployeeDetail = async (req, res) => {
     }
 
     const getUserProfile = await Employee.findById(userId).select("-password");
+    const companyId = getUserProfile.company._id.toString();
+
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId Invalid!!",
+      });
+    }
+    const companyDetails =
+      await Company.findById(companyId).select("companyName");
 
     if (!getUserProfile) {
       return res.status(400).json({
@@ -236,6 +248,7 @@ export const getEmployeeDetail = async (req, res) => {
       success: true,
       message: "Employee Detail successfully",
       getUserProfile,
+      companyDetails,
     });
   } catch (error) {
     console.error(error?.message || "Error in getEmployeeDetail controller");
@@ -535,7 +548,7 @@ export const allEmployeeDetails = async (req, res) => {
         },
         currentPage: page,
         totalPage: Math.ceil(totalEmployCount / limit),
-        employees: allEmployee,
+        employees: allEmployee.reverse(),
       },
     });
   } catch (error) {

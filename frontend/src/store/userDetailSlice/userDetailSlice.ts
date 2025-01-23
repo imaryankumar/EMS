@@ -56,7 +56,7 @@ export const getUserProfile = createSlice({
     });
     builder.addCase(getProfileDetail.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.userDetails = payload.getUserProfile;
+      state.userDetails = payload;
       state.isError = null;
     });
     builder.addCase(getProfileDetail.rejected, (state, { payload }) => {

@@ -49,6 +49,7 @@ const Login: React.FC = () => {
       );
       if (res?.data?.success) {
         StoreCookies("userToken", res?.data?.token);
+        StoreCookies("username", res?.data?.username);
         setUserDetails({
           email: "",
           password: "",
