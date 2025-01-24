@@ -227,16 +227,6 @@ export const getEmployeeDetail = async (req, res) => {
     }
 
     const getUserProfile = await Employee.findById(userId).select("-password");
-    const companyId = getUserProfile.company._id.toString();
-
-    if (!mongoose.Types.ObjectId.isValid(companyId)) {
-      return res.status(400).json({
-        success: false,
-        message: "CompanyId Invalid!!",
-      });
-    }
-    const companyDetails =
-      await Company.findById(companyId).select("companyName");
 
     if (!getUserProfile) {
       return res.status(400).json({
@@ -248,7 +238,6 @@ export const getEmployeeDetail = async (req, res) => {
       success: true,
       message: "Employee Detail successfully",
       getUserProfile,
-      companyDetails,
     });
   } catch (error) {
     console.error(error?.message || "Error in getEmployeeDetail controller");
@@ -492,6 +481,7 @@ export const allEmployeeDetails = async (req, res) => {
 
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    const isAuthUser = req.user.id;
 
     // if (designation) filterCriteria.designation = designation;
     // if (department) filterCriteria.department = department;
@@ -530,6 +520,19 @@ export const allEmployeeDetails = async (req, res) => {
       });
     }
 
+    const userFind =
+      await Employee.findById(isAuthUser).select("fullName company");
+
+    const companyId = userFind.company._id.toString();
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId Invalid!!",
+      });
+    }
+    const companyDetails =
+      await Company.findById(companyId).select("companyName");
+
     const maleCount = (await Employee.find({ gender: "male" })).length;
     const femaleCount = (await Employee.find({ gender: "female" })).length;
     const recentCount = (
@@ -549,6 +552,10 @@ export const allEmployeeDetails = async (req, res) => {
         currentPage: page,
         totalPage: Math.ceil(totalEmployCount / limit),
         employees: allEmployee.reverse(),
+        authUser: {
+          fullName: userFind.fullName,
+          companyName: companyDetails.companyName,
+        },
       },
     });
   } catch (error) {

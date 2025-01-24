@@ -32,30 +32,9 @@ const Overview = () => {
     return data;
   };
 
-  const fetchSingleData = async () => {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/single`,
-      {
-        withCredentials: true,
-      }
-    );
-    const data = await response.data;
-    return data;
-  };
-
   const { isError, isLoading, data } = useQuery({
     queryKey: ["users"],
     queryFn: fetchData,
-    staleTime: 10000,
-  });
-
-  const {
-    isError: singleUserError,
-    isLoading: singleUserLoading,
-    data: singleUserData,
-  } = useQuery({
-    queryKey: ["single"],
-    queryFn: fetchSingleData,
     staleTime: 10000,
   });
 
@@ -65,24 +44,24 @@ const Overview = () => {
     setSelectedOption(value);
   };
 
-  if (isError || singleUserError) {
+  if (isError) {
     return <>Error Found!!</>;
   }
 
   return (
     <div className="w-full h-full flex flex-col gap-10">
-      {singleUserLoading ? (
+      {isLoading ? (
         <Skeleton className="w-1/2 h-9" />
       ) : (
         <p className="text-3xl w-full">
           Hi,
           <span className="font-semibold text-cyan-500">
             {" "}
-            {singleUserData?.getUserProfile?.fullName}!!
+            {data?.allDetails?.authUser?.fullName}!!
           </span>{" "}
           Welcome to{" "}
           <span className="font-semibold text-cyan-500">
-            {singleUserData?.companyDetails?.companyName}
+            {data?.allDetails?.authUser?.companyName}
           </span>
         </p>
       )}
