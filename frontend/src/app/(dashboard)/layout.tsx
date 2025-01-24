@@ -1,5 +1,6 @@
 import ASidebar from "@/components/Dashboard/Asidebar";
 import Navbar from "@/components/Dashboard/Navbar";
+import ProfileDataWrapper from "@/layout/ProfileDataWrapper";
 
 export const metadata: any = {
   title: "Dashboard",
@@ -8,15 +9,17 @@ export const metadata: any = {
 
 const DashboardLayout = ({ children }: any) => {
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-1/6 h-full">
-        <ASidebar />
+    <ProfileDataWrapper>
+      <div className="w-full h-screen flex">
+        <div className="w-1/6 h-full">
+          <ASidebar />
+        </div>
+        <div className="w-5/6 h-full flex flex-col">
+          <Navbar />
+          <div className="flex-grow bg-[#fafafa] p-4">{children}</div>
+        </div>
       </div>
-      <div className="w-5/6 h-full flex flex-col">
-        <Navbar />
-        <div className="flex-grow bg-[#fafafa] p-4">{children}</div>
-      </div>
-    </div>
+    </ProfileDataWrapper>
   );
 };
 

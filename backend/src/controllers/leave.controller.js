@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import LeaveRequest, { leaveTypes } from "../models/leaveRequest.model.js";
+import Employee from "../models/employee.model.js";
 
 export const applyLeaveForm = async (req, res) => {
   try {
@@ -21,13 +22,35 @@ export const applyLeaveForm = async (req, res) => {
       });
     }
 
-    // Convert the dates to IST
-    // const istStartDate = new Date(startDate).toLocaleString("en-IN", {
-    //   timeZone: "Asia/Kolkata",
-    // });
-    // const istEndDate = new Date(endDate).toLocaleString("en-IN", {
-    //   timeZone: "Asia/Kolkata",
-    // });
+    const parsedStartDate = new Date(startDate);
+    const parsedEndDate = new Date(endDate);
+
+    if (parsedStartDate > parsedEndDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Start date cannot be after end date!",
+      });
+    }
+
+    const overlappingLeaves = await LeaveRequest.findOne({
+      employee: req.user.id,
+      status: { $nin: ["Rejected"] },
+      $or: [
+        { startDate: { $lte: parsedEndDate, $gte: parsedStartDate } },
+        { endDate: { $lte: parsedEndDate, $gte: parsedStartDate } },
+        {
+          startDate: { $lte: parsedStartDate },
+          endDate: { $gte: parsedEndDate },
+        },
+      ],
+    });
+
+    if (overlappingLeaves) {
+      return res.status(400).json({
+        success: false,
+        message: "You already have a leave request during this period!",
+      });
+    }
 
     const leave = await LeaveRequest.create({
       employee: req.user.id,
@@ -122,12 +145,34 @@ export const allLeaveApproved = async (req, res) => {
       status: { $nin: ["Rejected"] },
       startDate: { $lte: endOfDay },
       endDate: { $gte: startOfDay },
-    });
+    }).select("employee status");
+
+    const employeeIds = allLeaves.map((id) => id.employee.toString());
+    const employeeDetails = await Employee.find({
+      _id: { $in: employeeIds },
+    }).select(
+      "_id fullName email employeeId designation profilePic phoneNumber dateOfJoining role"
+    );
+
+    // Add Employee Details inside Leave Fields
+    const employees = allLeaves
+      .map((leave) => {
+        const employee = employeeDetails.find(
+          (emp) => emp._id.toString() === leave.employee.toString()
+        );
+        return {
+          ...employee?.toObject(),
+          status: leave.status,
+        };
+      })
+      .filter(Boolean);
 
     return res.status(200).json({
       success: true,
       message: "These employees are on leave on the specified day!",
-      allLeaves,
+      allDetails: {
+        employees,
+      },
     });
   } catch (error) {
     console.error(error?.message || "Error in all leaves controller");

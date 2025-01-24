@@ -18,9 +18,10 @@ const ProfileCard = ({ isLoading, isError, data }: any) => {
       });
     }
   };
+
   const employeeCount = data?.allDetails?.employees?.length || 10;
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 h-[30rem] overflow-auto scrollbar pr-2">
+    <div className="w-full grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4  overflow-auto scrollbar pr-2">
       {isLoading ? (
         Array.from({ length: employeeCount }).map((_, index) => (
           <Card
@@ -40,7 +41,17 @@ const ProfileCard = ({ isLoading, isError, data }: any) => {
         data?.allDetails.employees.map((employee: any) => (
           <Card
             key={employee?._id}
-            className="w-full shadow-md hover:shadow-lg border border-gray-200 transition-shadow duration-300">
+            className="w-full relative shadow-md hover:shadow-lg border border-gray-200 transition-shadow duration-300">
+            {employee?.status && (
+              <span
+                className={`absolute right-0 w-24 px-3 py-1 rounded-tl-lg rounded-bl-lg top-2 ${
+                  employee?.status === "Pending"
+                    ? "bg-orange-400"
+                    : "bg-green-500"
+                }`}>
+                {employee?.status}
+              </span>
+            )}
             <CardContent className="p-8">
               <div className="flex flex-col items-center gap-4">
                 <img
