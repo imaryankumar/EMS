@@ -24,7 +24,8 @@ import { DateReverseFormat } from "@/helper/DateFormat";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
 import DatePicker from "@/components/common/DatePicker";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import toast from "react-hot-toast";
 
 export const leaveTypes = [
   "Casual Leave",
@@ -44,6 +45,10 @@ const Leaves = () => {
   const [leavedate, setLeaveDate] = useState<Date | undefined>(new Date());
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [reasonData, setReasonData] = useState<string | null>(null);
+  const [isLeaveType, setIsLeaveType] = useState<string | null>(null);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchLeaveData = async ({ date }: any) => {
     const response = await axios.get(
@@ -70,6 +75,49 @@ const Leaves = () => {
     setEndDate(selectedDate);
   };
 
+  const onLeaveSubmitHandler = async (e: any) => {
+    e.preventDefault();
+    if (!isLeaveType || !reasonData) {
+      toast.error("All fields are required!", {
+        id: "empty",
+      });
+      return;
+    }
+    const payload = {
+      leaveType: isLeaveType,
+      startDate: "2025-02-12",
+      endDate: "2025-02-12",
+      reason: reasonData,
+    };
+    try {
+      setIsDataLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/leave-apply`,
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+      if (response?.data?.success) {
+        toast.success(response?.data?.message);
+        setLeaveDate(new Date());
+        setStartDate(undefined);
+        setEndDate(undefined);
+        setReasonData(null);
+        setIsLeaveType(null);
+        setIsModalOpen(false);
+        //TODO SOCKET IMPLEMENT
+      } else {
+        toast.error("Something went wrong, please try again.");
+      }
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "something went wrong!!");
+      toast.error(error?.response?.data?.message || "Internal Server Error!!");
+    } finally {
+      setIsDataLoading(false);
+    }
+  };
+
   return (
     <div className="w-full h-full">
       <div className="flex flex-col items-start justify-center gap-12 px-8">
@@ -80,13 +128,14 @@ const Leaves = () => {
           </h2>
           <div className="flex items-center justify-center gap-12">
             <div>
-              <Dialog>
+              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button variant="default">Leave Apply</Button>
                 </DialogTrigger>
                 <DialogContent
                   className="sm:max-w-[425px] md:max-w-[625px]"
-                  onInteractOutside={(event) => event.preventDefault()}>
+                  onInteractOutside={(event) => event.preventDefault()}
+                  aria-describedby={undefined}>
                   <DialogHeader>
                     <DialogTitle>Leave Application</DialogTitle>
                   </DialogHeader>
@@ -96,7 +145,7 @@ const Leaves = () => {
                         Select Leave Type
                         <span className="text-red-500"> *</span>
                       </Label>
-                      <Select>
+                      <Select onValueChange={(value) => setIsLeaveType(value)}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Leave Type" />
                         </SelectTrigger>
@@ -141,15 +190,21 @@ const Leaves = () => {
                       <Label htmlFor="reason" className="font-semibold">
                         Reason<span className="text-red-500"> *</span>
                       </Label>
-                      <Input
-                        type="text"
+                      <Textarea
                         id="reason"
                         placeholder="Enter your reason"
+                        onChange={(e) => setReasonData(e.target.value)}
                       />
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <Button
+                      type="submit"
+                      disabled={isDataLoading}
+                      onClick={onLeaveSubmitHandler}
+                      className="disabled:opacity-80">
+                      {isDataLoading ? "Loading.." : "Save changes"}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
