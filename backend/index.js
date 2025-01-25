@@ -9,6 +9,7 @@ import LeaveEmployeRouter from "./src/routes/leave.route.js";
 import CompanyRouter from "./src/routes/company.route.js";
 import AssetRouter from "./src/routes/asset.route.js";
 import SubscriptionRouter from "./src/routes/subscription.route.js";
+import WorkLogRouter from "./src/routes/worklog.route.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,6 +45,7 @@ app.use("/api/v1/employee", EmployeeRouter);
 app.use("/api/v1/employee", LeaveEmployeRouter);
 app.use("/api/v1/company", CompanyRouter);
 app.use("/api/v1/asset", AssetRouter);
+app.use("/api/v1/worklog", WorkLogRouter);
 app.use("/api/v1/subscription", SubscriptionRouter);
 
 // Global error handler

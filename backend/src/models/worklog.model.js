@@ -10,7 +10,7 @@ const workLogSchema = new mongoose.Schema(
     date: { type: Date, required: true },
     project: { type: String, required: true },
     description: { type: String, required: true },
-    hoursSpent: { type: Number, required: true },
+    hourSpent: { type: String, required: true },
   },
   { timestamps: true }
 );

@@ -203,7 +203,7 @@ const Leaves = () => {
                       disabled={isDataLoading}
                       onClick={onLeaveSubmitHandler}
                       className="disabled:opacity-80">
-                      {isDataLoading ? "Loading.." : "Save changes"}
+                      {isDataLoading ? "Loading.." : "Leave Submit"}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
