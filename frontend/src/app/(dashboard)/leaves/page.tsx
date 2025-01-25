@@ -1,30 +1,50 @@
 "use client";
-import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { DateReverseFormat } from "@/helper/DateFormat";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
+import DatePicker from "@/components/common/DatePicker";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
+export const leaveTypes = [
+  "Casual Leave",
+  "Sick Leave",
+  "Half-Day Leave (Casual)",
+  "Half-Day Leave (Sick)",
+  "Compensatory Leave (India)",
+  "Compensatory Leave (Egypt)",
+  "Work From Home",
+  "Marriage Leave (Self)",
+  "Parental Leave",
+  "Parental Work From Home",
+  "Birthday Month leave",
+];
 
 const Leaves = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [leavedate, setLeaveDate] = useState<Date | undefined>(new Date());
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+
   const fetchLeaveData = async ({ date }: any) => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/leave-approved?date=${date}`
@@ -32,22 +52,31 @@ const Leaves = () => {
     return response.data;
   };
   const { isError, isLoading, data } = useQuery({
-    queryKey: ["leaves", date],
+    queryKey: ["leaves", leavedate],
     queryFn: () =>
-      fetchLeaveData({ date: date || DateReverseFormat(new Date() as any) }),
+      fetchLeaveData({
+        date: leavedate || DateReverseFormat(new Date() as any),
+      }),
     staleTime: 10000,
   });
-  const handleDateChange = (selectedDate: any) => {
-    setDate(selectedDate);
-    console.log(selectedDate);
+  const handleLeaveDateChange = (selectedDate: any) => {
+    setLeaveDate(selectedDate);
   };
+
+  const handleStartDateChange = (selectedDate: any) => {
+    setStartDate(selectedDate);
+  };
+  const handleEndDateChange = (selectedDate: any) => {
+    setEndDate(selectedDate);
+  };
+
   return (
     <div className="w-full h-full">
       <div className="flex flex-col items-start justify-center gap-12 px-8">
         <div className="w-full flex items-center justify-between">
           <h2 className="w-full text-3xl font-medium capitalize">
-            Our Team Buddy Leave{" "}
-            <span className="text-cyan-500 font-semibold"> today</span>
+            Our Team Buddy{" "}
+            <span className="text-cyan-500 font-semibold"> Leave today</span>
           </h2>
           <div className="flex items-center justify-center gap-12">
             <div>
@@ -55,15 +84,70 @@ const Leaves = () => {
                 <DialogTrigger asChild>
                   <Button variant="default">Leave Apply</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent
+                  className="sm:max-w-[425px] md:max-w-[625px]"
+                  onInteractOutside={(event) => event.preventDefault()}>
                   <DialogHeader>
                     <DialogTitle>Leave Application</DialogTitle>
-                    <DialogDescription>
-                      Make changes to your profile here. Click save when you're
-                      done.
-                    </DialogDescription>
                   </DialogHeader>
-                  <div className="grid gap-4 py-4">Hello</div>
+                  <div className="grid gap-4 py-4">
+                    <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="select" className="font-semibold">
+                        Select Leave Type
+                        <span className="text-red-500"> *</span>
+                      </Label>
+                      <Select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select Leave Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Leave Type</SelectLabel>
+                            {leaveTypes.map((leave, index) => {
+                              return (
+                                <SelectItem
+                                  key={index}
+                                  value={leave}
+                                  className="cursor-pointer">
+                                  {leave}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="end" className="font-semibold">
+                        Start Date<span className="text-red-500"> *</span>
+                      </Label>
+                      <DatePicker
+                        date={startDate}
+                        handleDateChange={handleStartDateChange}
+                        width="w-full"
+                      />
+                    </div>
+                    <div className="w-full flex flex-col gap-2">
+                      <Label htmlFor="start" className="font-semibold">
+                        End Date<span className="text-red-500"> *</span>
+                      </Label>
+                      <DatePicker
+                        date={endDate}
+                        handleDateChange={handleEndDateChange}
+                        width="w-full"
+                      />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label htmlFor="reason" className="font-semibold">
+                        Reason<span className="text-red-500"> *</span>
+                      </Label>
+                      <Input
+                        type="text"
+                        id="reason"
+                        placeholder="Enter your reason"
+                      />
+                    </div>
+                  </div>
                   <DialogFooter>
                     <Button type="submit">Save changes</Button>
                   </DialogFooter>
@@ -71,29 +155,14 @@ const Leaves = () => {
               </Dialog>
             </div>
             <div>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className="w-[240px] pl-3 text-left font-normal">
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={handleDateChange}
-                    className="rounded-md border shadow"
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <DatePicker
+                date={leavedate}
+                handleDateChange={handleLeaveDateChange}
+              />
             </div>
           </div>
         </div>
-        <div className="">
+        <div className="w-full h-[45rem] overflow-auto scrollbar">
           <ProfileCard isLoading={isLoading} isError={isError} data={data} />
         </div>
       </div>

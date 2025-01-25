@@ -101,7 +101,9 @@ const Overview = () => {
           <Search />
         </div>
       </div>
-      <ProfileCard data={data} isLoading={isLoading} isError={isError} />
+      <div className="w-full h-[30rem] overflow-auto scrollbar pr-2">
+        <ProfileCard data={data} isLoading={isLoading} isError={isError} />
+      </div>
     </div>
   );
 };
