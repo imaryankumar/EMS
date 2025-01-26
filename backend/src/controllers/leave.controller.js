@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import LeaveRequest, { leaveTypes } from "../models/leaveRequest.model.js";
 import Employee from "../models/employee.model.js";
+import Company from "../models/company.model.js";
 
 export const applyLeaveForm = async (req, res) => {
   try {
@@ -79,7 +80,7 @@ export const applyLeaveForm = async (req, res) => {
 export const updateLeaveStatus = async (req, res) => {
   try {
     const { leaveRequestId, status } = req.body;
-    console.log(req.user.id);
+
     if (!leaveRequestId) {
       return res.status(400).json({
         success: false,
@@ -138,18 +139,35 @@ export const allLeaveApproved = async (req, res) => {
       });
     }
 
+    const userId = req.user.id;
+    const companys = await Employee.findById(userId).select("company");
+    const companyId = companys.company._id.toString();
+
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid companyId!!",
+      });
+    }
+
     const parsedDate = new Date(date);
 
     const startOfDay = new Date(parsedDate.setHours(0, 0, 0, 0));
     const endOfDay = new Date(parsedDate.setHours(23, 59, 59, 999));
 
+    const companyEmployees = await Employee.find({
+      company: companyId,
+    }).select("_id");
+
+    const employeeIds = companyEmployees.map((emp) => emp._id.toString());
+
     const allLeaves = await LeaveRequest.find({
+      employee: { $in: employeeIds },
       status: { $nin: ["Rejected"] },
       startDate: { $lte: endOfDay },
       endDate: { $gte: startOfDay },
     }).select("employee status");
 
-    const employeeIds = allLeaves.map((id) => id.employee.toString());
     const employeeDetails = await Employee.find({
       _id: { $in: employeeIds },
     }).select(

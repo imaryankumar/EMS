@@ -17,6 +17,6 @@ router.put(
   updateLeaveStatus
 );
 
-router.get("/leave-approved", allLeaveApproved);
+router.get("/leave-approved", UserAuth, allLeaveApproved);
 
 export default router;

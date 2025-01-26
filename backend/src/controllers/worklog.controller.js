@@ -60,6 +60,7 @@ export const GetAllWorkLog = async (req, res) => {
     const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
     const allLogs = await WorkLog.find({
+      employee: req.user.id,
       date: { $gte: startOfMonth, $lte: endOfMonth },
     })
       .select("-employee")
@@ -68,6 +69,7 @@ export const GetAllWorkLog = async (req, res) => {
       .sort({ date: -1 });
 
     const totalLogs = await WorkLog.countDocuments({
+      employee: req.user.id,
       date: { $gte: startOfMonth, $lte: endOfMonth },
     });
 

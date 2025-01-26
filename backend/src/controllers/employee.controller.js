@@ -470,39 +470,29 @@ export const deleteEmployeeDetails = async (req, res) => {
 
 export const allEmployeeDetails = async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
-      designation,
-      department,
-      role,
-      reportingManager,
-    } = req.query;
+    const { page = 1, limit = 10, name } = req.query;
+
+    const isAuthUser = req.user.id;
+
+    const userFind = await Employee.findById(isAuthUser).select(
+      "fullName company role"
+    );
+    const companyId = userFind.company._id.toString();
+
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId Invalid!!",
+      });
+    }
 
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-    const isAuthUser = req.user.id;
 
-    // if (designation) filterCriteria.designation = designation;
-    // if (department) filterCriteria.department = department;
-    // if (role) filterCriteria.role = role;
-    // if (reportingManager) filterCriteria.reportingManager = reportingManager;
-
-    const filterCriteria = {};
-
-    if (designation)
-      filterCriteria.designation = {
-        $regex: `^${designation}$`,
-        $options: "i",
-      };
-    if (department)
-      filterCriteria.department = { $regex: `^${department}$`, $options: "i" };
-    if (role) filterCriteria.role = { $regex: `^${role}$`, $options: "i" };
-    if (reportingManager)
-      filterCriteria.reportingManager = {
-        $regex: `^${reportingManager}$`,
-        $options: "i",
-      };
+    const filterCriteria = { company: companyId };
+    if (name) {
+      filterCriteria.fullName = { $regex: name, $options: "i" };
+    }
 
     const allEmployee = await Employee.find(filterCriteria)
       .select(
@@ -511,7 +501,22 @@ export const allEmployeeDetails = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(Number(limit));
 
-    const totalEmployCount = await Employee.countDocuments(filterCriteria);
+    const totalEmployCount = await Employee.countDocuments({
+      company: companyId,
+    });
+
+    const maleCount = await Employee.countDocuments({
+      company: companyId,
+      gender: "male",
+    });
+    const femaleCount = await Employee.countDocuments({
+      company: companyId,
+      gender: "female",
+    });
+    const recentCount = await Employee.countDocuments({
+      company: companyId,
+      createdAt: { $gte: oneMonthAgo },
+    });
 
     if (!allEmployee || allEmployee.length === 0) {
       return res.status(404).json({
@@ -520,24 +525,8 @@ export const allEmployeeDetails = async (req, res) => {
       });
     }
 
-    const userFind =
-      await Employee.findById(isAuthUser).select("fullName company");
-
-    const companyId = userFind.company._id.toString();
-    if (!mongoose.Types.ObjectId.isValid(companyId)) {
-      return res.status(400).json({
-        success: false,
-        message: "CompanyId Invalid!!",
-      });
-    }
     const companyDetails =
       await Company.findById(companyId).select("companyName");
-
-    const maleCount = (await Employee.find({ gender: "male" })).length;
-    const femaleCount = (await Employee.find({ gender: "female" })).length;
-    const recentCount = (
-      await Employee.find({ createdAt: { $gte: oneMonthAgo } })
-    ).length;
 
     return res.status(200).json({
       success: true,
@@ -555,6 +544,7 @@ export const allEmployeeDetails = async (req, res) => {
         authUser: {
           fullName: userFind.fullName,
           companyName: companyDetails.companyName,
+          role: userFind.role,
         },
       },
     });

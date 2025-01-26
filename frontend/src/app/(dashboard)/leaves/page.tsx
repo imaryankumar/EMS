@@ -26,6 +26,7 @@ import DatePicker from "@/components/common/DatePicker";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
+import { Plus } from "lucide-react";
 
 export const leaveTypes = [
   "Casual Leave",
@@ -52,7 +53,10 @@ const Leaves = () => {
 
   const fetchLeaveData = async ({ date }: any) => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/leave-approved?date=${date}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/employee/leave-approved?date=${date}`,
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   };
@@ -131,6 +135,7 @@ const Leaves = () => {
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-cyan-600 text-base hover:bg-cyan-500">
+                    <Plus />
                     Leave Apply
                   </Button>
                 </DialogTrigger>

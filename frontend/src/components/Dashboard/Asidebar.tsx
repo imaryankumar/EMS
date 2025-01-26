@@ -72,8 +72,6 @@ const ASidebar = () => {
     setActiveRouteId(id);
   };
 
-  console.log("user==>", userDetails);
-
   const profilepic =
     userDetails?.profilePic || "https://avatar.iran.liara.run/public";
 
@@ -126,7 +124,9 @@ const ASidebar = () => {
               <div
                 onClick={() => handleRouteChange(route.url)}
                 className={`flex items-center justify-start gap-4 py-3 px-6 cursor-pointer rounded-tl-full rounded-bl-full ${
-                  activeRouteId === route?.url ? "bg-white text-cyan-500" : ""
+                  activeRouteId === route?.url
+                    ? "bg-[#f3f3f3] text-cyan-500"
+                    : ""
                 }`}>
                 <span>{route?.icon}</span>
                 <span className="text-xl font-semibold capitalize">

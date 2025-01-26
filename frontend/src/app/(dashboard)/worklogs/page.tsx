@@ -4,12 +4,15 @@ import WorkLogCard from "@/components/common/WorkLogCard";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Plus } from "lucide-react";
 
 const WorkLogs = () => {
-  const datas = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   const fetchWorkData = async () => {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/worklog/all-logs`
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/worklog/all-logs`,
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   };
@@ -25,8 +28,9 @@ const WorkLogs = () => {
       <div className="w-full flex flex-col gap-8">
         <div className="w-full flex items-start justify-between">
           <h2 className="text-2xl font-semibold">WorkLog</h2>
-          <Button className="px-8 py-5 text-lg bg-blue-500 hover:bg-blue-600">
-            Add Work
+          <Button className="bg-cyan-600 text-base hover:bg-cyan-500">
+            <Plus />
+            Add Works
           </Button>
         </div>
         <div className="w-full h-[45rem] overflow-auto pr-4 scrollbar">

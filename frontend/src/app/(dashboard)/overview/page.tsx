@@ -1,8 +1,6 @@
 "use client";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import SelectDropdown from "@/components/common/SelectDropdown";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -10,6 +8,7 @@ import { GetCookies } from "@/helper/CookieStore";
 import EmployeCard from "@/components/Dashboard/EmployeCard";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 const Overview = () => {
   const router = useRouter();
@@ -38,12 +37,6 @@ const Overview = () => {
     staleTime: 10000,
   });
 
-  const [selectedOption, setSelectedOption] = useState("");
-
-  const handleSelectChange = (value: string) => {
-    setSelectedOption(value);
-  };
-
   if (isError) {
     return <>Error Found!!</>;
   }
@@ -68,15 +61,27 @@ const Overview = () => {
       <EmployeCard userCount={data?.allDetails?.totalEmployee} />
       <div className="w-full flex items-center justify-between">
         <h2 className="text-2xl font-semibold">All Employees</h2>
-        <div className="flex w-80 items-center px-3 py-2 relative shadow-sm border rounded-md">
-          <input
-            type="text"
-            className="w-full border-none bg-transparent rounded-md outline-none"
-            placeholder="Search"
-          />
-          <span>
-            <Search size={20} />
-          </span>
+        <div className="flex items-center justify-center gap-8">
+          {isLoading ? (
+            <Skeleton className="w-36 h-10" />
+          ) : (
+            data?.allDetails?.authUser?.role === "HR" && (
+              <Button onClick={() => router.push("/signup")}>
+                <Plus />
+                Add Employee
+              </Button>
+            )
+          )}
+          <div className="flex w-80 items-center px-3 py-2 relative shadow-sm border rounded-md">
+            <input
+              type="text"
+              className="w-full border-none bg-transparent rounded-md outline-none"
+              placeholder="Search"
+            />
+            <span>
+              <Search size={20} />
+            </span>
+          </div>
         </div>
       </div>
       <div className="w-full h-[30rem] overflow-auto scrollbar pr-2">
