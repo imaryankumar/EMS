@@ -551,7 +551,7 @@ export const allEmployeeDetails = async (req, res) => {
         },
         currentPage: page,
         totalPage: Math.ceil(totalEmployCount / limit),
-        employees: allEmployee.reverse(),
+        employees: allEmployee,
         authUser: {
           fullName: userFind.fullName,
           companyName: companyDetails.companyName,

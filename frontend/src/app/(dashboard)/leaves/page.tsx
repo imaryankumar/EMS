@@ -85,8 +85,8 @@ const Leaves = () => {
     }
     const payload = {
       leaveType: isLeaveType,
-      startDate: "2025-02-12",
-      endDate: "2025-02-12",
+      startDate: "2025-02-21",
+      endDate: "2025-02-21",
       reason: reasonData,
     };
     try {
@@ -120,7 +120,7 @@ const Leaves = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="flex flex-col items-start justify-center gap-12 px-8">
+      <div className="flex flex-col items-start justify-center gap-12">
         <div className="w-full flex items-center justify-between">
           <h2 className="w-full text-3xl font-medium capitalize">
             Our Team Buddy{" "}
@@ -130,7 +130,9 @@ const Leaves = () => {
             <div>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="default">Leave Apply</Button>
+                  <Button className="bg-cyan-600 text-base hover:bg-cyan-500">
+                    Leave Apply
+                  </Button>
                 </DialogTrigger>
                 <DialogContent
                   className="sm:max-w-[425px] md:max-w-[625px]"

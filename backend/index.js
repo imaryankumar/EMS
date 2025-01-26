@@ -30,7 +30,7 @@ const allowedOrigins =
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(limiter);
+// app.use(limiter);
 app.use(
   cors({
     origin: allowedOrigins,

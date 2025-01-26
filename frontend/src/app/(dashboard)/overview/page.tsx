@@ -49,7 +49,7 @@ const Overview = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col gap-10">
+    <div className="w-full h-full flex flex-col gap-8">
       {isLoading ? (
         <Skeleton className="w-1/2 h-9" />
       ) : (
@@ -66,39 +66,17 @@ const Overview = () => {
         </p>
       )}
       <EmployeCard userCount={data?.allDetails?.totalEmployee} />
-      <div className="w-full flex items-center justify-start gap-6">
-        <div className="w-80">
-          <Input type="text" placeholder="Search name" className="py-6" />
-        </div>
-        <div className="w-72">
-          <SelectDropdown
-            name="Select Status"
-            label="Status"
-            items={["option1"]}
-            selectedValue={selectedOption}
-            onChange={handleSelectChange}
+      <div className="w-full flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">All Employees</h2>
+        <div className="flex w-80 items-center px-3 py-2 relative shadow-sm border rounded-md">
+          <input
+            type="text"
+            className="w-full border-none bg-transparent rounded-md outline-none"
+            placeholder="Search"
           />
-        </div>
-        <div className="w-72">
-          <SelectDropdown
-            name="Select Priority"
-            label="Priority"
-            items={["option1"]}
-            selectedValue={selectedOption}
-            onChange={handleSelectChange}
-          />
-        </div>
-        <div className="w-72">
-          <SelectDropdown
-            name="Select Priority"
-            label="Priority"
-            items={["option1"]}
-            selectedValue={selectedOption}
-            onChange={handleSelectChange}
-          />
-        </div>
-        <div className="p-3 bg-black text-white  rounded-lg cursor-pointer">
-          <Search />
+          <span>
+            <Search size={20} />
+          </span>
         </div>
       </div>
       <div className="w-full h-[30rem] overflow-auto scrollbar pr-2">

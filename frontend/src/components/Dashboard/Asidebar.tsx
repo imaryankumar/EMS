@@ -11,6 +11,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../../public/images/logoicon.png";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
+import { Skeleton } from "../ui/skeleton";
 
 interface Route {
   id: number;
@@ -20,80 +23,119 @@ interface Route {
 }
 
 const ASidebar = () => {
-  const [activeRouteId, setActiveRouteId] = useState<number>(1);
+  const pathname = usePathname().slice(1);
+  const [activeRouteId, setActiveRouteId] = useState<string>(pathname);
+  const { userDetails, isLoading } = useAppSelector(
+    (state) => state.getProfileDetail
+  );
 
   const routes: Route[] = [
     {
       id: 1,
-      label: "overview",
+      label: "Overview",
       url: "overview",
-      icon: <PieChart size={20} />,
+      icon: <PieChart size={25} />,
     },
     {
       id: 2,
       label: "leaves",
       url: "leaves",
-      icon: <CalendarCheck size={20} />,
+      icon: <CalendarCheck size={25} />,
     },
     {
       id: 3,
       label: "workLog",
       url: "worklogs",
-      icon: <Briefcase size={20} />,
+      icon: <Briefcase size={25} />,
     },
     {
       id: 4,
       label: "attendance",
       url: "attendance",
-      icon: <Book size={20} />,
+      icon: <Book size={25} />,
     },
     {
       id: 5,
       label: "inventory",
       url: "inventory",
-      icon: <Package size={20} />,
+      icon: <Package size={25} />,
     },
     {
       id: 6,
       label: "profile",
       url: "profile",
-      icon: <User size={20} />,
+      icon: <User size={25} />,
     },
   ];
 
-  const handleRouteChange = (id: number) => {
+  const handleRouteChange = (id: any) => {
     setActiveRouteId(id);
   };
 
+  console.log("user==>", userDetails);
+
+  const profilepic =
+    userDetails?.profilePic || "https://avatar.iran.liara.run/public";
+
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full flex flex-col items-start justify-start gap-10 py-4 px-8">
+      <div className="w-full h-full flex flex-col items-center justify-start gap-8 py-5 bg-cyan-800 text-white">
         <div className="relative">
-          <Image
+          {/* <Image
             src={Logo}
             alt="Logo"
             width={200}
             height={200}
             className="blend-image"
-          />
+          /> */}
+          <h2 className="text-3xl font-sans">Track Force</h2>
         </div>
-        <div className="flex flex-col gap-3 w-full h-full">
+        <div className="flex p-2 flex-col items-center justify-center gap-2">
+          {isLoading ? (
+            <Skeleton className="w-32 h-32 rounded-full" />
+          ) : (
+            <div className="relative">
+              <Image src={profilepic} alt="Profile" width={150} height={150} />
+            </div>
+          )}
+
+          {isLoading ? (
+            <Skeleton className="w-48 h-6 rounded" />
+          ) : (
+            <h2 className="font-semibold text-2xl">{userDetails?.fullName}</h2>
+          )}
+
+          {isLoading ? (
+            <Skeleton className="w-44 h-5 rounded" />
+          ) : (
+            <span className="text-lg">{userDetails?.designation}</span>
+          )}
+
+          {isLoading ? (
+            <Skeleton className="w-40 h-5 rounded" />
+          ) : (
+            <span className="border px-6 py-0.5 bg-transparent text-cyan-500 rounded-full">
+              {userDetails?.role}
+            </span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-4 w-full h-full pl-6">
           {routes.map((route) => (
             <Link key={route?.id} href={route?.url}>
               <div
-                onClick={() => handleRouteChange(route.id)}
-                className={`flex items-center justify-start gap-3 py-1 px-2 cursor-pointer rounded hover:bg-slate-300 ${
-                  activeRouteId === route?.id ? "bg-slate-300" : ""
+                onClick={() => handleRouteChange(route.url)}
+                className={`flex items-center justify-start gap-4 py-3 px-6 cursor-pointer rounded-tl-full rounded-bl-full ${
+                  activeRouteId === route?.url ? "bg-white text-cyan-500" : ""
                 }`}>
                 <span>{route?.icon}</span>
-                <span className="text-lg font-semibold capitalize">
+                <span className="text-xl font-semibold capitalize">
                   {route?.label}
                 </span>
               </div>
             </Link>
           ))}
         </div>
-        <div>Hello</div>
       </div>
     </div>
   );

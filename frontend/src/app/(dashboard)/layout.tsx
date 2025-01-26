@@ -16,7 +16,7 @@ const DashboardLayout = ({ children }: any) => {
         </div>
         <div className="w-5/6 h-full flex flex-col">
           <Navbar />
-          <div className="flex-grow bg-[#fafafa] p-4">{children}</div>
+          <div className="flex-grow bg-[#fafafa] px-8 py-4">{children}</div>
         </div>
       </div>
     </ProfileDataWrapper>

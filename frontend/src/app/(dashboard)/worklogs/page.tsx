@@ -22,7 +22,7 @@ const WorkLogs = () => {
 
   return (
     <div className="w-full h-full relative">
-      <div className="w-full flex flex-col gap-7 px-4">
+      <div className="w-full flex flex-col gap-8">
         <div className="w-full flex items-start justify-between">
           <h2 className="text-2xl font-semibold">WorkLog</h2>
           <Button className="px-8 py-5 text-lg bg-blue-500 hover:bg-blue-600">
