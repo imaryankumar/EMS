@@ -52,6 +52,8 @@ export const applyLeaveForm = async (req, res) => {
       });
     }
 
+    // TODO Notification send on your manager
+
     const leave = await LeaveRequest.create({
       employee: req.user.id,
       leaveType,

@@ -10,10 +10,16 @@ import CompanyRouter from "./src/routes/company.route.js";
 import AssetRouter from "./src/routes/asset.route.js";
 import SubscriptionRouter from "./src/routes/subscription.route.js";
 import WorkLogRouter from "./src/routes/worklog.route.js";
+import { initializeSocket } from "./src/middleware/Socket.js";
+import http from "http";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 dotenv.config();
+
+// Socket Connection
+const server = http.createServer(app);
+initializeSocket(server);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -30,7 +36,7 @@ const allowedOrigins =
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(limiter);
+app.use(limiter);
 app.use(
   cors({
     origin: allowedOrigins,
@@ -55,7 +61,7 @@ app.use((err, req, res, next) => {
 });
 
 // Server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   ConnectDB();
   console.log(`Server is Listening on PORT:${PORT}`);
 });
