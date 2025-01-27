@@ -29,8 +29,13 @@ const WorkLogCard = ({ data, isLoading, isError }: any) => {
                   {card?.status}
                 </span>
               </div>
-              <span>
-                <ChevronRight />
+              <span
+                className={`${
+                  !(card?.status === "not updated")
+                    ? "text-gray-300 cursor-not-allowed"
+                    : "cursor-pointer"
+                }`}>
+                <ChevronRight size={30} />
               </span>
             </Card>
           </div>
