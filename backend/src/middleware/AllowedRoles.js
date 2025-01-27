@@ -23,7 +23,7 @@ const AllowedRoles = (roles) => {
       } else {
         return res.status(403).json({
           success: false,
-          message: "Access denied!!",
+          message: `Access denied ${userRole.role}!!`,
         });
       }
     } catch (error) {

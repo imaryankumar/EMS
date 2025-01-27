@@ -16,7 +16,7 @@ import CompanyAuth from "../middleware/CompanyAuth.js";
 
 const router = express.Router();
 
-router.post("/signup", CompanyAuth, employeeSignup);
+router.post("/signup", UserAuth, AllowedRoles(["HR", "Admin"]), employeeSignup);
 router.post("/login", employeeLogin);
 router.post("/logout", employeeLogout);
 router.post("/forgot", employeeForgotPassword);

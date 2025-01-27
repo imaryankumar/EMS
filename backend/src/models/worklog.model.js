@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+export const projectWorkName = [
+  "ProjectA",
+  "ProjectB",
+  "ProjectC",
+  "ProjectD",
+  "ProjectE",
+];
+
 const workLogSchema = new mongoose.Schema(
   {
     employee: {
@@ -8,7 +16,7 @@ const workLogSchema = new mongoose.Schema(
       required: true,
     },
     date: { type: Date, required: true },
-    project: { type: String, required: true },
+    project: { type: String, required: true, enum: projectWorkName },
     description: { type: String, required: true },
     hourSpent: { type: String, required: true },
   },
