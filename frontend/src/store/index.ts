@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import getUserProfile from "./userDetailSlice/userDetailSlice"
-
+import getUserProfile from "./userDetailSlice/userDetailSlice";
+import getUtilsData from "./utilsData/utilsDataSlice";
 
 export const store = configureStore({
   reducer: {
-    getProfileDetail:getUserProfile ,
+    getProfileDetail: getUserProfile,
+    utilsData: getUtilsData,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

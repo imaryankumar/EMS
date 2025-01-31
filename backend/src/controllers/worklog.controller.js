@@ -4,8 +4,8 @@ import Employee from "../models/employee.model.js";
 
 export const AddWorkLog = async (req, res) => {
   try {
-    const { date, project, description, hourSpent } = req.body;
-    if (!date || !project || !description || !hourSpent) {
+    const { date, project, description, hourSpent, dayType } = req.body;
+    if (!date || !project || !description || !hourSpent || !dayType) {
       return res.status(400).json({
         success: false,
         message: "All fields are required!!",
@@ -37,6 +37,7 @@ export const AddWorkLog = async (req, res) => {
       project,
       description,
       hourSpent,
+      dayType,
     });
 
     return res.status(201).json({
@@ -178,7 +179,7 @@ export const GetLogsData = async (req, res) => {
     endOfMonth.setHours(23, 59, 59, 999);
 
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
+    currentDate.setUTCHours(0, 0, 0, 0);
 
     const worklogs = await WorkLog.find({
       date: {

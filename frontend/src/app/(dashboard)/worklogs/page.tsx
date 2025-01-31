@@ -2,11 +2,14 @@
 
 import WorkLogCard from "@/components/common/WorkLogCard";
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/store/hooks";
+import { setIsWorkModalOpen } from "@/store/utilsData/utilsDataSlice";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ClipboardMinus, Plus } from "lucide-react";
 
 const WorkLogs = () => {
+  const dispatch = useAppDispatch();
   const fetchWorkData = async ({ year, month }: any) => {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/worklog/all-works?month=${month}&year=${year}`,
@@ -18,7 +21,7 @@ const WorkLogs = () => {
   };
 
   const { isError, isLoading, data } = useQuery({
-    queryKey: ["work"],
+    queryKey: ["workLogs"],
     queryFn: () =>
       fetchWorkData({
         month: "01",
@@ -27,7 +30,6 @@ const WorkLogs = () => {
     staleTime: 10000,
   });
 
-  console.log("Datat==>", data);
   return (
     <div className="w-full h-full relative">
       <div className="w-full flex flex-col gap-8">
@@ -38,7 +40,9 @@ const WorkLogs = () => {
             </span>
             Work Reports
           </h2>
-          <Button className="bg-cyan-600 text-base hover:bg-cyan-500">
+          <Button
+            className="bg-cyan-600 text-base hover:bg-cyan-500"
+            onClick={() => dispatch(setIsWorkModalOpen(true))}>
             <Plus />
             Add Works
           </Button>
