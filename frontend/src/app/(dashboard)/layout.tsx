@@ -10,13 +10,15 @@ export const metadata: any = {
 const DashboardLayout = ({ children }: any) => {
   return (
     <ProfileDataWrapper>
-      <div className="w-full h-screen flex">
-        <div className="w-1/6 h-full">
+      <div className="w-full h-screen flex relative">
+        <div className="w-4/5 lg:w-1/6 h-full absolute left-0 top-0 bottom-0 z-50 lg:relative">
           <ASidebar />
         </div>
-        <div className="w-5/6 h-full flex flex-col">
+        <div className="w-full xl:w-5/6 h-full flex flex-col">
           <Navbar />
-          <div className="flex-grow bg-[#f3f3f3] px-8 py-4">{children}</div>
+          <div className="flex-grow bg-[#f3f3f3] px-4 md:px-10 lg:px-8 py-4">
+            {children}
+          </div>
         </div>
       </div>
     </ProfileDataWrapper>

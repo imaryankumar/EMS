@@ -51,14 +51,14 @@ const Navbar = () => {
     }
   };
   return (
-    <nav className="w-full flex items-center justify-between h-20 px-8">
-      <div className="flex items-center justify-center gap-3">
+    <nav className="w-full flex items-center justify-between h-16 lg:h-20 px-4 lg:px-8">
+      <div className="flex items-center justify-center gap-1 lg:gap-3">
         <Link href={"/"}>
           <span className="cursor-pointer">
-            <House size={25} />
+            <House className="text-xl sm:text-2xl" />
           </span>
         </Link>
-        <ChevronRight size={25} />
+        <ChevronRight className="text-xl sm:text-2xl" />
         <span className="capitalize font-semibold text-gray-400 text-xl">
           {pathname}
         </span>
@@ -67,13 +67,16 @@ const Navbar = () => {
         <div className="border p-2 rounded-full">
           <Bell size={20} />
         </div>
-        <div className="flex items-center gap-3">
-          <span className="w-10 h-10 flex items-center justify-center overflow-hidden rounded-full border bg-gray-200">
+        <div className="flex items-center gap-0 lg:gap-3">
+          <span className="w-10 h-10 hidden sm:flex items-center justify-center overflow-hidden rounded-full border bg-gray-200">
             {username?.slice(0, 1) || ""}
           </span>
+          <div className="flex sm:hidden" onClick={fetchLogout}>
+            <LogOut className="text-xl" />
+          </div>
           <Popover>
             <PopoverTrigger>
-              <div className="flex gap-1 items-center justify-center">
+              <div className="sm:flex gap-1 items-center justify-center hidden">
                 <span className="w-28">{username}</span>
                 <span>
                   <ChevronDown size={20} />

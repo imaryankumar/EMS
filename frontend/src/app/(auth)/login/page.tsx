@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
-import { StoreCookies } from "@/helper/CookieStore";
+import { RemoveCookies, StoreCookies } from "@/helper/CookieStore";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -50,6 +50,15 @@ const Login: React.FC = () => {
       if (res?.data?.success) {
         StoreCookies("userToken", res?.data?.token);
         StoreCookies("username", res?.data?.username);
+
+        if (res?.data?.message?.toLowerCase().includes("expired")) {
+          RemoveCookies("userToken");
+          RemoveCookies("username");
+          router.push("/login");
+          toast.error("Session expired, please login again.");
+          return;
+        }
+
         setUserDetails({
           email: "",
           password: "",

@@ -21,6 +21,10 @@ const attendanceSchema = new mongoose.Schema(
       enum: ["Present", "Absent", "Half-Day", "WFH", "Leave"],
     },
     reason: { type: String },
+    checkInLatitude: { type: Number },
+    checkInLongitude: { type: Number },
+    checkOutLatitude: { type: Number },
+    checkOutLongitude: { type: Number },
     approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
   },
   { timestamps: true }

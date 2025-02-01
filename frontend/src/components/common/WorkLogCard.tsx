@@ -73,6 +73,11 @@ const WorkLogCard = ({ data }: any) => {
     onSuccess: () => {
       toast.success("Work log submitted successfully!!");
       queryClient.invalidateQueries(["workLogs"] as any);
+      setIsCurrentDate(null);
+      setDayType(null);
+      setSelectedProject(null);
+      setDescription("");
+      setHourSpent("");
       dispatch(setIsWorkModalOpen(false));
     },
     onError: () => {
@@ -101,7 +106,7 @@ const WorkLogCard = ({ data }: any) => {
         {data?.result?.map((card: any, index: any) => (
           <div key={index} className="h-full">
             <Card
-              className="w-full h-32 flex items-center justify-between px-4"
+              className="w-full h-32 flex items-center justify-between px-4 cursor-pointer"
               onClick={() => onWorkLogHandler(card)}>
               <div className="flex items-center gap-4">
                 <div className="border flex flex-col h-16 w-24 items-center rounded">
@@ -255,7 +260,7 @@ const WorkLogCard = ({ data }: any) => {
                   !dayType || !selectedProject || !description || !hourSpent
                 }
                 className="disabled:opacity-50">
-                Submit
+                {mutation.isPending ? "Loading..." : "Submit Work"}
               </Button>
             </DialogFooter>
           </DialogContent>
