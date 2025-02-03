@@ -89,8 +89,8 @@ const Leaves = () => {
     }
     const payload = {
       leaveType: isLeaveType,
-      startDate: "2025-02-21",
-      endDate: "2025-02-21",
+      startDate: "2025-02-03",
+      endDate: "2025-02-15",
       reason: reasonData,
     };
     try {
@@ -131,6 +131,12 @@ const Leaves = () => {
             <span className="text-cyan-500 font-semibold"> Leave today</span>
           </h2>
           <div className="flex items-center justify-center gap-12">
+            <div>
+              <DatePicker
+                date={leavedate}
+                handleDateChange={handleLeaveDateChange}
+              />
+            </div>
             <div>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
@@ -215,12 +221,6 @@ const Leaves = () => {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-            </div>
-            <div>
-              <DatePicker
-                date={leavedate}
-                handleDateChange={handleLeaveDateChange}
-              />
             </div>
           </div>
         </div>

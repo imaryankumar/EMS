@@ -182,6 +182,7 @@ export const GetLogsData = async (req, res) => {
     currentDate.setUTCHours(0, 0, 0, 0);
 
     const worklogs = await WorkLog.find({
+      employee: req.user.id,
       date: {
         $gte: startOfMonth,
         $lt: endOfMonth,
@@ -189,6 +190,7 @@ export const GetLogsData = async (req, res) => {
     }).lean();
 
     const employees = await Employee.find({
+      _id: req.user.id,
       dateOfJoining: { $lte: currentDate },
     }).lean();
 
@@ -244,7 +246,7 @@ export const GetLogsData = async (req, res) => {
       .filter((item) => item !== null);
 
     if (result.length === 0) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Logs not found for certain days.",
       });

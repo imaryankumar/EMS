@@ -122,7 +122,9 @@ const ProfileCard = ({ isLoading, isError, data }: any) => {
           </Card>
         ))
       ) : (
-        <p className="text-gray-500 text-center">No employees found.</p>
+        <p className="text-gray-500 text-xl font-semibold">
+          No employees found.
+        </p>
       )}
     </div>
   );
