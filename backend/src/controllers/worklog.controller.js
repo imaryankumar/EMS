@@ -267,3 +267,29 @@ export const GetLogsData = async (req, res) => {
     });
   }
 };
+
+export const ProjectWiseData = async (req, res) => {
+  try {
+    const { projectName, employeeId } = req.params;
+    const getFindData = await WorkLog.find({
+      project: projectName,
+      employee: employeeId,
+    }).select("description date dayType hourSpent");
+    const totalHoursSpent = getFindData.reduce(
+      (total, log) => total + log.hourSpent,
+      0
+    );
+    return res.status(200).json({
+      success: true,
+      totalHours: totalHoursSpent,
+      data: getFindData,
+      message: "Success",
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in project wise");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};

@@ -4,6 +4,7 @@ import {
   AddWorkLog,
   GetAllWorkLog,
   GetLogsData,
+  ProjectWiseData,
   RemoveProjectWork,
   UpdateWorkLog,
 } from "../controllers/worklog.controller.js";
@@ -15,7 +16,6 @@ const router = express.Router();
 router.post("/add-work", UserAuth, AddWorkLog);
 router.get("/all-logs", UserAuth, GetAllWorkLog);
 router.put("/update-work/:workId", UpdateWorkLog);
-
 router.get("/all-works", UserAuth, GetLogsData);
 
 router.post(
@@ -29,6 +29,13 @@ router.post(
   UserAuth,
   AllowedRoles(["Admin", "HR"]),
   RemoveProjectWork
+);
+
+router.get(
+  "/:employeeId/:projectName",
+  UserAuth,
+  AllowedRoles(["Admin", "HR"]),
+  ProjectWiseData
 );
 
 export default router;

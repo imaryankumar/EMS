@@ -28,8 +28,8 @@ const companySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subscription",
   },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
+  // latitude: { type: Number, required: true },
+  // longitude: { type: Number, required: true },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
 });
