@@ -79,13 +79,13 @@ const ASidebar = () => {
     <div className="w-full h-full">
       <div className="w-full h-full flex flex-col items-center justify-start gap-8 py-5 bg-cyan-800 text-white">
         <div className="relative">
-          {/* <Image
+          <Image
             src={Logo}
             alt="Logo"
             width={200}
             height={200}
             className="blend-image"
-          /> */}
+          />
           <h2 className="text-3xl font-sans">Track Force</h2>
         </div>
         <div className="flex p-2 flex-col items-center justify-center gap-2">
