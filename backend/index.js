@@ -29,7 +29,7 @@ const limiter = rateLimit({
 
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? ["https://yourfrontend.com"]
+    ? ["http://localhost:3000"]
     : ["http://localhost:3000"];
 
 // Middleware
