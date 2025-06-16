@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Logo from "../../../../public/images/logoicon.png";
+import Logo from "../../../../public/images/logoIcon.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
       <div className="w-full h-full flex flex-col lg:flex-row ">
         <div className="w-full lg:w-3/5 h-1/2 md:h-3/4 lg:h-full bg-cover bg-no-repeat bg-custom-login" />
         <div className="w-full lg:w-2/5 h-full flex flex-col gap-8 items-center justify-center px-4 lg:px-12 ">
-          <div className="relative">
+          <div className="relative bg-cyan-600 rounded">
             <Image
               src={Logo}
               alt="Logo"

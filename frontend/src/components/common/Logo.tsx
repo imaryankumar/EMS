@@ -4,7 +4,7 @@ import React from "react";
 
 const LogoComponent: React.FC = () => {
   return (
-    <div className="relative flex items-center w-32 h-32">
+    <div className="relative flex items-center w-44 h-[22rem]">
       <Image src={LogoImage} alt="Logo" className="blend-image" fill />
     </div>
   );

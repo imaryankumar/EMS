@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { Label } from "@radix-ui/react-label";
-import DatePicker from "./DatePicker";
 import { Checkbox } from "../ui/checkbox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
@@ -30,6 +29,7 @@ import { setIsWorkModalOpen } from "@/store/utilsData/utilsDataSlice";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import toast from "react-hot-toast";
+import { format } from "date-fns";
 
 export const projectWorkName = [
   "ProjectA",
@@ -100,6 +100,11 @@ const WorkLogCard = ({ data, isError, isLoading }: any) => {
     mutation.mutate(payload);
   };
 
+  // Handle date input change
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCurrentDate(e.target.value);
+  };
+
   return (
     <>
       <div className="w-full flex flex-col gap-4 overflow-auto scrollbar pr-4">
@@ -168,10 +173,17 @@ const WorkLogCard = ({ data, isError, isLoading }: any) => {
               </DialogTitle>
             </DialogHeader>
             <div className="w-full flex flex-col gap-5">
-              <div className="relative z-[9999]">
+              {/* CHANGED: Replace DatePicker with simple date input */}
+              <div className="w-full flex flex-col gap-2">
                 <Label>Select Date</Label>
-                <DatePicker width="w-full" date={isCurrentDate} />
+                <Input
+                  type="date"
+                  value={isCurrentDate || ""}
+                  onChange={handleDateChange}
+                  className="w-full"
+                />
               </div>
+
               <div className="w-full flex flex-col gap-3">
                 <Label>Select Day Type</Label>
                 <div className="flex items-center gap-4">
@@ -232,6 +244,7 @@ const WorkLogCard = ({ data, isError, isLoading }: any) => {
                     <Textarea
                       className="min-h-36"
                       placeholder="Type your message here."
+                      value={description}
                       onChange={(e) => setDescription(e.target.value)}
                     />
                   </div>
