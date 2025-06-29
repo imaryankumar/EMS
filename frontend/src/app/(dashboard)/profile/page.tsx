@@ -152,8 +152,7 @@ const Profile = () => {
           <Select
             key={field.name}
             value={userDetail[field.name]}
-            onValueChange={(value) => handleSelectChange(field.name, value)}
-          >
+            onValueChange={(value) => handleSelectChange(field.name, value)}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder={field.label} />
             </SelectTrigger>
@@ -204,7 +203,7 @@ const Profile = () => {
 
   return (
     <div className="w-full h-full flex items-center justify-center ">
-      <Card className="w-full h-full">
+      <Card className="w-full h-full max-h-[50rem] overflow-y-auto">
         <CardHeader>
           <CardTitle className="text-2xl">Update an account</CardTitle>
           <CardDescription>

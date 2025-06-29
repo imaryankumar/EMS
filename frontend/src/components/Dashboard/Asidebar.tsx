@@ -110,7 +110,7 @@ const ASidebar = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-4 w-full h-full pl-6 pt-10">
+        <div className="flex flex-col gap-2 w-full h-full pl-6 pt-8">
           {routes.map((route) => (
             <Link key={route?.id} href={route?.url}>
               <div

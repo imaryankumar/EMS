@@ -85,6 +85,8 @@ export const companyLogin = async (req, res) => {
       phoneNumber,
     });
 
+    console.log("companyExist", companyExist);
+
     if (!companyExist) {
       return res.status(400).json({
         success: false,
@@ -113,6 +115,7 @@ export const companyLogin = async (req, res) => {
       success: true,
       message: "Company Login successfully",
       token,
+      companyId: companyExist._id,
     });
   } catch (error) {
     console.error(error?.message || "Error on Company Login Controller");

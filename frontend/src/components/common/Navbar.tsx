@@ -1,11 +1,16 @@
+import Image from "next/image";
 import { Button } from "../ui/button";
-import LogoComponent from "./Logo";
+import LogoImage from "../../../public/images/logoIcon.png";
 
 const Navbar = () => {
   return (
-    <div className="w-full flex items-center justify-between px-20 h-24 bg-slate-100 border-b">
-      <LogoComponent />
-      <Button>Get Started</Button>
+    <div className="w-full flex items-center justify-between px-20 h-24 bg-cyan-800 border-b">
+      <div className="relative flex items-center w-28 h-28">
+        <Image src={LogoImage} alt="Logo" className="blend-image" fill />
+      </div>
+      <Button className="bg-white text-black hover:bg-white hover:text-black p-5">
+        Get Started
+      </Button>
     </div>
   );
 };
