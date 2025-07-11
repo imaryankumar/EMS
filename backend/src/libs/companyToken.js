@@ -2,8 +2,7 @@ import jwt from "jsonwebtoken";
 
 const CompanyToken = async (companyId, res) => {
   try {
-
-    const token = await jwt.sign({companyId }, process.env.JWT_SECRET_KEY, {
+    const token = await jwt.sign({ companyId }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1d",
     });
 
@@ -16,8 +15,10 @@ const CompanyToken = async (companyId, res) => {
 
     res.cookie("companyToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      // secure: process.env.NODE_ENV === "production",
+      // sameSite: "strict",
+      secure: false,
+      sameSite: "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
