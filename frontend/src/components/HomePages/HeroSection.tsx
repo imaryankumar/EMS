@@ -1,6 +1,7 @@
 import React from "react";
 import { Users, Calendar, Clock, FileText, User, Package } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const TrackForceLanding = () => {
   const features = [
@@ -72,12 +73,16 @@ const TrackForceLanding = () => {
                 place.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-cyan-800 text-white px-8 py-3 rounded-lg font-medium hover:bg-cyan-900 transition-colors">
-                  Book a Demo
-                </button>
-                <button className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:border-gray-400 transition-colors">
-                  Start Free Trial
-                </button>
+                <Link href={"/company"}>
+                  <button className="bg-cyan-800 text-white px-8 py-3 rounded-lg font-medium hover:bg-cyan-900 transition-colors">
+                    Book a Demo
+                  </button>
+                </Link>
+                <Link href={"/company"}>
+                  <button className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:border-gray-400 transition-colors">
+                    Start Free Trial
+                  </button>
+                </Link>
               </div>
             </div>
 

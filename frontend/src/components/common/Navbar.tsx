@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import LogoImage from "../../../public/images/logoIcon.png";
+import Link from "next/link";
 
 const Navbar = () => {
   return (
@@ -8,9 +9,11 @@ const Navbar = () => {
       <div className="relative flex items-center w-28 h-28">
         <Image src={LogoImage} alt="Logo" className="blend-image" fill />
       </div>
-      <Button className="bg-white text-black hover:bg-white hover:text-black p-5">
-        Get Started
-      </Button>
+      <Link href={"/overview"}>
+        <Button className="bg-white text-black hover:bg-white hover:text-black p-5">
+          Get Started
+        </Button>
+      </Link>
     </div>
   );
 };
