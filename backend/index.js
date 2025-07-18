@@ -14,8 +14,8 @@ import { initializeSocket } from "./src/middleware/Socket.js";
 import http from "http";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 dotenv.config();
+const PORT = process.env.PORT || 5000;
 
 // Socket Connection
 const server = http.createServer(app);
@@ -28,9 +28,9 @@ const limiter = rateLimit({
 });
 
 const allowedOrigins =
-  process.env.NODE_ENV === "production"
-    ? ["https://yourfrontend.com"]
-    : ["http://localhost:3000"];
+  process.env.NODE_ENV === "production" ?
+    ["https://yourfrontend.com"]
+  : ["http://localhost:3000"];
 
 // Middleware
 app.use(express.json());
