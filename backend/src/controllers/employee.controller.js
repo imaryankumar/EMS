@@ -26,6 +26,7 @@ export const employeeSignup = async (req, res) => {
       reportingManager,
       gender,
       jobType,
+      companyId,
     } = req.body;
 
     if (
@@ -51,6 +52,20 @@ export const employeeSignup = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "All fields are required!",
+      });
+    }
+
+    if (!companyId) {
+      return res.status(400).json({
+        success: false,
+        message: "companyId is required !!",
+      });
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).json({
+        success: false,
+        message: "CompanyId Invalid!!",
       });
     }
 
@@ -85,12 +100,6 @@ export const employeeSignup = async (req, res) => {
         message: "Failed to hash password",
       });
     }
-    if (!mongoose.Types.ObjectId.isValid(req.company.companyId)) {
-      return res.status(400).json({
-        success: false,
-        message: "CompanyId Invalid!!",
-      });
-    }
 
     const maleProfilePic = `https://avatar.iran.liara.run/public/boy?username=${fullName.split(" ")[0]}`;
     const femaleProfilePic = `https://avatar.iran.liara.run/public/girl?username=${fullName.split(" ")[0]}`;
@@ -113,7 +122,7 @@ export const employeeSignup = async (req, res) => {
       gender,
       jobType,
       reportingManager,
-      company: req.company.companyId,
+      company: companyId,
       profilePic: gender === "male" ? maleProfilePic : femaleProfilePic,
     });
 
@@ -168,6 +177,8 @@ export const employeeLogin = async (req, res) => {
     //   });
     // }
 
+    console.log("Roles==>", isEmployeeExist.company._id);
+
     const isComparePassword = await bcrypt.compare(
       password,
       isEmployeeExist.password
@@ -180,11 +191,13 @@ export const employeeLogin = async (req, res) => {
     }
 
     const token = await UserToken(isEmployeeExist._id, res);
+
     return res.status(200).json({
       success: true,
       message: "Login Successfully",
       token,
       username: isEmployeeExist.fullName.replace(" ", "_"),
+      companyId: isEmployeeExist.role === "HR" || "ADMIN" ? "yes" : "no",
     });
   } catch (error) {
     console.error(error?.message || "Error on Login Controller");

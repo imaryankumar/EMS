@@ -4,8 +4,8 @@ import Employee from "../models/employee.model.js";
 
 export const AddWorkLog = async (req, res) => {
   try {
-    const { date, project, description, hourSpent } = req.body;
-    if (!date || !project || !description || !hourSpent) {
+    const { date, project, description, hourSpent, dayType } = req.body;
+    if (!date || !project || !description || !hourSpent || !dayType) {
       return res.status(400).json({
         success: false,
         message: "All fields are required!!",
@@ -37,6 +37,7 @@ export const AddWorkLog = async (req, res) => {
       project,
       description,
       hourSpent,
+      dayType,
     });
 
     return res.status(201).json({
@@ -178,9 +179,10 @@ export const GetLogsData = async (req, res) => {
     endOfMonth.setHours(23, 59, 59, 999);
 
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
+    currentDate.setUTCHours(0, 0, 0, 0);
 
     const worklogs = await WorkLog.find({
+      employee: req.user.id,
       date: {
         $gte: startOfMonth,
         $lt: endOfMonth,
@@ -188,6 +190,7 @@ export const GetLogsData = async (req, res) => {
     }).lean();
 
     const employees = await Employee.find({
+      _id: req.user.id,
       dateOfJoining: { $lte: currentDate },
     }).lean();
 
@@ -243,7 +246,7 @@ export const GetLogsData = async (req, res) => {
       .filter((item) => item !== null);
 
     if (result.length === 0) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         message: "Logs not found for certain days.",
       });
@@ -258,6 +261,32 @@ export const GetLogsData = async (req, res) => {
     });
   } catch (error) {
     console.error(error?.message || "Error in fetching worklogs");
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+export const ProjectWiseData = async (req, res) => {
+  try {
+    const { projectName, employeeId } = req.params;
+    const getFindData = await WorkLog.find({
+      project: projectName,
+      employee: employeeId,
+    }).select("description date dayType hourSpent");
+    const totalHoursSpent = getFindData.reduce(
+      (total, log) => total + log.hourSpent,
+      0
+    );
+    return res.status(200).json({
+      success: true,
+      totalHours: totalHoursSpent,
+      data: getFindData,
+      message: "Success",
+    });
+  } catch (error) {
+    console.error(error?.message || "Error in project wise");
     return res.status(500).json({
       success: false,
       message: "Internal Server Error!",

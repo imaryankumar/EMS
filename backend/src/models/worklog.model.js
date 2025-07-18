@@ -18,7 +18,8 @@ const workLogSchema = new mongoose.Schema(
     date: { type: Date, required: true },
     project: { type: String, required: true, enum: projectWorkName },
     description: { type: String, required: true },
-    hourSpent: { type: String, required: true },
+    hourSpent: { type: Number, required: true },
+    dayType: { type: String, required: true, enum: ["full", "half"] },
   },
   { timestamps: true }
 );

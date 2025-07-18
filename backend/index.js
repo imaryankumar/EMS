@@ -15,7 +15,7 @@ import http from "http";
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Socket Connection
 const server = http.createServer(app);
@@ -28,9 +28,9 @@ const limiter = rateLimit({
 });
 
 const allowedOrigins =
-  process.env.NODE_ENV === "production" ?
-    ["https://yourfrontend.com"]
-  : ["http://localhost:3000"];
+  process.env.NODE_ENV === "production"
+    ? ["http://localhost:3000"]
+    : ["http://localhost:3000"];
 
 // Middleware
 app.use(express.json());

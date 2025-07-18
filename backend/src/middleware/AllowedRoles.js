@@ -17,7 +17,9 @@ const AllowedRoles = (roles) => {
           message: "Invalid userId!!",
         });
       }
+
       const userRole = await Employee.findById(user);
+
       if (roles.includes(userRole.role)) {
         next();
       } else {

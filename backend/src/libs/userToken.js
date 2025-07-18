@@ -15,8 +15,10 @@ const UserToken = async (userId, res) => {
 
     res.cookie("userToken", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      // secure: process.env.NODE_ENV === "production"
+      // sameSite: "strict",
+      secure: false,
+      sameSite: "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
