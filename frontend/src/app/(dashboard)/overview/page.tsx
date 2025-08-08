@@ -9,6 +9,7 @@ import EmployeCard from "@/components/Dashboard/EmployeCard";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import React from "react";
 
 const Overview = () => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const Overview = () => {
       {isLoading ? (
         <Skeleton className="w-1/2 h-9" />
       ) : (
-        <p className="text-3xl w-full">
+        <p className="text-2xl sm:text-3xl w-full text-center lg:text-left px-4 sm:px-0">
           Hi,
           <span className="font-semibold text-cyan-500">
             {" "}
@@ -59,7 +60,7 @@ const Overview = () => {
         </p>
       )}
       <EmployeCard userCount={data?.allDetails?.totalEmployee} />
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
         <h2 className="text-2xl font-semibold">All Employees</h2>
         <div className="flex items-center justify-center gap-8">
           {isLoading ? (
@@ -72,7 +73,7 @@ const Overview = () => {
               </Button>
             )
           )}
-          <div className="flex w-80 items-center px-3 py-2 relative shadow-sm border rounded-md">
+          <div className="flex w-72 sm:w-80 items-center px-3 py-2 relative shadow-sm border rounded-md">
             <input
               type="text"
               className="w-full border-none bg-transparent rounded-md outline-none"
@@ -84,7 +85,7 @@ const Overview = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-[30rem] overflow-auto scrollbar pr-2">
+      <div className="w-full h-[26rem] md:h-[45rem] lg:h-[55rem] xl:h-[30rem] overflow-auto scrollbar pr-4 lg:pr-2">
         <ProfileCard data={data} isLoading={isLoading} isError={isError} />
       </div>
     </div>

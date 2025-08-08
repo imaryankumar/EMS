@@ -1,4 +1,6 @@
 "use client";
+import HeroSection from "@/components/HomePages/HeroSection";
+import Navbar from "@/components/common/Navbar";
 import { GetCookies } from "@/helper/CookieStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -15,7 +17,8 @@ const Home = () => {
 
   return (
     <>
-      <h1>Hello</h1>
+      <Navbar />
+      <HeroSection />
     </>
   );
 };

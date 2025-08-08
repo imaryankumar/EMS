@@ -1,37 +1,41 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 
-const DatePicker = ({ date, handleDateChange, width = "w-[240px]" }: any) => {
+interface SimpleDateInputProps {
+  date: Date | undefined;
+  handleDateChange: (date: Date | undefined) => void;
+  width?: string;
+  placeholder?: string;
+}
+
+const SimpleDateInput = ({
+  date,
+  handleDateChange,
+  width = "w-full",
+  placeholder = "Select date",
+}: SimpleDateInputProps) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) {
+      handleDateChange(new Date(value));
+    } else {
+      handleDateChange(undefined);
+    }
+  };
+
+  const dateValue = date ? format(date, "yyyy-MM-dd") : "";
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={`${width} pl-3 text-left font-normal`}>
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={handleDateChange}
-          className="rounded-md border shadow"
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
+    <Input
+      type="date"
+      value={dateValue}
+      onChange={handleInputChange}
+      className={width}
+      placeholder={placeholder}
+    />
   );
 };
 
-export default DatePicker;
+export default SimpleDateInput;

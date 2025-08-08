@@ -1,21 +1,7 @@
 import { UserCheck, UserMinus, UserPlus, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-// import { useEffect } from "react";
-// import { useAppDispatch, useAppSelector } from "@/store/hooks";
-// import { getAllProfileDetail } from "@/store/userDetailSlice/userDetailSlice";
 
 const EmployeCard = ({ userCount }: any) => {
-  //   const dispatch = useAppDispatch();
-  //   const { isError, isLoading, getAllProfiles } = useAppSelector(
-  //     (state) => state.getProfileDetail
-  //   );
-
-  //   console.log("Data==>", getAllProfileDetail);
-
-  //   useEffect(() => {
-  //     dispatch(getAllProfileDetail());
-  //   }, [dispatch]);
-
   const employeeStats = [
     {
       id: 1,
@@ -47,7 +33,7 @@ const EmployeCard = ({ userCount }: any) => {
     },
   ];
   return (
-    <div className="w-full flex gap-8">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-4">
       {employeeStats.map((item) => (
         <div key={item?.id} className="w-full h-auto">
           <Card className={`${item?.bgColor} shadow-none border-none`}>

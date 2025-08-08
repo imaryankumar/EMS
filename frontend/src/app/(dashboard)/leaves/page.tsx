@@ -22,11 +22,13 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { DateReverseFormat } from "@/helper/DateFormat";
 import ProfileCard from "@/components/Dashboard/ProfileCard";
-import DatePicker from "@/components/common/DatePicker";
+import DatePicker from "@/components/common/DatePicker"; // Keep this for the main date picker
+import { Input } from "@/components/ui/input"; // Simple date input for dialog
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
 import { Plus } from "lucide-react";
+import { format } from "date-fns";
 
 export const leaveTypes = [
   "Casual Leave",
@@ -46,8 +48,8 @@ const Leaves = () => {
   const [leavedate, setLeaveDate] = useState<Date | undefined>(new Date());
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [reasonData, setReasonData] = useState<string | null>(null);
-  const [isLeaveType, setIsLeaveType] = useState<string | null>(null);
+  const [reasonData, setReasonData] = useState<string>("");
+  const [isLeaveType, setIsLeaveType] = useState<string>("");
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -60,6 +62,7 @@ const Leaves = () => {
     );
     return response.data;
   };
+
   const { isError, isLoading, data } = useQuery({
     queryKey: ["leaves", leavedate],
     queryFn: () =>
@@ -68,31 +71,46 @@ const Leaves = () => {
       }),
     staleTime: 10000,
   });
-  const handleLeaveDateChange = (selectedDate: any) => {
+
+  const handleLeaveDateChange = (selectedDate: Date | undefined) => {
     setLeaveDate(selectedDate);
   };
 
-  const handleStartDateChange = (selectedDate: any) => {
-    setStartDate(selectedDate);
+  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) {
+      setStartDate(new Date(value));
+    } else {
+      setStartDate(undefined);
+    }
   };
-  const handleEndDateChange = (selectedDate: any) => {
-    setEndDate(selectedDate);
+
+  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) {
+      setEndDate(new Date(value));
+    } else {
+      setEndDate(undefined);
+    }
   };
 
   const onLeaveSubmitHandler = async (e: any) => {
     e.preventDefault();
-    if (!isLeaveType || !reasonData) {
+
+    if (!isLeaveType || !reasonData || !startDate || !endDate) {
       toast.error("All fields are required!", {
         id: "empty",
       });
       return;
     }
+
     const payload = {
       leaveType: isLeaveType,
-      startDate: "2025-02-21",
-      endDate: "2025-02-21",
+      startDate: format(startDate, "yyyy-MM-dd"),
+      endDate: format(endDate, "yyyy-MM-dd"),
       reason: reasonData,
     };
+
     try {
       setIsDataLoading(true);
       const response = await axios.post(
@@ -102,13 +120,14 @@ const Leaves = () => {
           withCredentials: true,
         }
       );
+
       if (response?.data?.success) {
         toast.success(response?.data?.message);
         setLeaveDate(new Date());
         setStartDate(undefined);
         setEndDate(undefined);
-        setReasonData(null);
-        setIsLeaveType(null);
+        setReasonData("");
+        setIsLeaveType("");
         setIsModalOpen(false);
         //TODO SOCKET IMPLEMENT
       } else {
@@ -132,6 +151,13 @@ const Leaves = () => {
           </h2>
           <div className="flex items-center justify-center gap-12">
             <div>
+              {/* Keep your existing DatePicker for the main filter */}
+              <DatePicker
+                date={leavedate}
+                handleDateChange={handleLeaveDateChange}
+              />
+            </div>
+            <div>
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-cyan-600 text-base hover:bg-cyan-500">
@@ -152,7 +178,9 @@ const Leaves = () => {
                         Select Leave Type
                         <span className="text-red-500"> *</span>
                       </Label>
-                      <Select onValueChange={(value) => setIsLeaveType(value)}>
+                      <Select
+                        onValueChange={(value) => setIsLeaveType(value)}
+                        value={isLeaveType}>
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Leave Type" />
                         </SelectTrigger>
@@ -173,26 +201,39 @@ const Leaves = () => {
                         </SelectContent>
                       </Select>
                     </div>
+
+                    {/* Simple date inputs - NO z-index issues */}
                     <div className="w-full flex flex-col gap-2">
-                      <Label htmlFor="end" className="font-semibold">
+                      <Label htmlFor="start-date" className="font-semibold">
                         Start Date<span className="text-red-500"> *</span>
                       </Label>
-                      <DatePicker
-                        date={startDate}
-                        handleDateChange={handleStartDateChange}
-                        width="w-full"
+                      <Input
+                        id="start-date"
+                        type="date"
+                        value={startDate ? format(startDate, "yyyy-MM-dd") : ""}
+                        onChange={handleStartDateChange}
+                        className="w-full"
                       />
                     </div>
+
                     <div className="w-full flex flex-col gap-2">
-                      <Label htmlFor="start" className="font-semibold">
+                      <Label htmlFor="end-date" className="font-semibold">
                         End Date<span className="text-red-500"> *</span>
                       </Label>
-                      <DatePicker
-                        date={endDate}
-                        handleDateChange={handleEndDateChange}
-                        width="w-full"
+                      <Input
+                        id="end-date"
+                        type="date"
+                        value={endDate ? format(endDate, "yyyy-MM-dd") : ""}
+                        onChange={handleEndDateChange}
+                        className="w-full"
+                        min={
+                          startDate
+                            ? format(startDate, "yyyy-MM-dd")
+                            : undefined
+                        }
                       />
                     </div>
+
                     <div className="grid w-full items-center gap-1.5">
                       <Label htmlFor="reason" className="font-semibold">
                         Reason<span className="text-red-500"> *</span>
@@ -200,6 +241,7 @@ const Leaves = () => {
                       <Textarea
                         id="reason"
                         placeholder="Enter your reason"
+                        value={reasonData}
                         onChange={(e) => setReasonData(e.target.value)}
                       />
                     </div>
@@ -215,12 +257,6 @@ const Leaves = () => {
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
-            </div>
-            <div>
-              <DatePicker
-                date={leavedate}
-                handleDateChange={handleLeaveDateChange}
-              />
             </div>
           </div>
         </div>

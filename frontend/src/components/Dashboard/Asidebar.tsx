@@ -9,11 +9,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../../public/images/logoicon.png";
+import Logo from "../../../public/images/trackforce.webp";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/store/hooks";
 import { Skeleton } from "../ui/skeleton";
+import LogoComponent from "../common/Logo";
 
 interface Route {
   id: number;
@@ -77,17 +78,8 @@ const ASidebar = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="w-full h-full flex flex-col items-center justify-start gap-8 py-5 bg-cyan-800 text-white">
-        <div className="relative">
-          {/* <Image
-            src={Logo}
-            alt="Logo"
-            width={200}
-            height={200}
-            className="blend-image"
-          /> */}
-          <h2 className="text-3xl font-sans">Track Force</h2>
-        </div>
+      <div className="w-full h-full flex flex-col items-center justify-start py-5 bg-cyan-800 text-white">
+        <LogoComponent />
         <div className="flex p-2 flex-col items-center justify-center gap-2">
           {isLoading ? (
             <Skeleton className="w-32 h-32 rounded-full" />
@@ -118,7 +110,7 @@ const ASidebar = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-4 w-full h-full pl-6">
+        <div className="flex flex-col gap-2 w-full h-full pl-6 pt-8">
           {routes.map((route) => (
             <Link key={route?.id} href={route?.url}>
               <div
